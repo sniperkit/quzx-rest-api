@@ -10,6 +10,13 @@ type TorrentFeed struct {
 	Total int `json:"total"`
 	Unread int `json:"unread"`
 }
+type TorrentNews struct {
+	Id int `json:"id"`
+	FeedId int `json:"feed_id"`
+	Link string `json:"link"`
+	Title string `json:"title"`
+	Readed int `json:"readed"`
+}
 
 func GetUnreadedTorrentFeeds() ([]*TorrentFeed, error) {
 
@@ -23,6 +30,24 @@ func GetUnreadedTorrentFeeds() ([]*TorrentFeed, error) {
 			f := TorrentFeed{}
 			rows.Scan(&f.Id, &f.TypeId, &f.Link, &f.Title, &f.Total, &f.Unread)
 			result = append(result, &f)
+		}
+	}
+
+	return result, err
+}
+
+func GetUnreadedNewsByFeed(feed_id int) ([]*TorrentNews, error) {
+
+	result := []*TorrentNews{}
+	rows, err := db.Query("SELECT Id, Feed_id, Link, Title, Readed FROM News WHERE Feed_id = $1 and Readed = 0", feed_id)
+
+	if err != nil {
+		log.Println(err)
+	} else {
+		for rows.Next() {
+			n := TorrentNews{}
+			rows.Scan(&n.Id, &n.FeedId, &n.Link, &n.Title, &n.Readed)
+			result = append(result, &n)
 		}
 	}
 

@@ -11,6 +11,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/stack/questions/{classification}", controllers.GetStackQuestionsByClassification)
 	r.HandleFunc("/api/feeds/unread", controllers.GetUnreadedTorrentFeeds)
+	r.HandleFunc("/api/feeds/{feed_id}/news", controllers.GetUnreadedNewsByFeed)
 	http.Handle("/", r)
 	http.ListenAndServe("0.0.0.0:4000", nil)
 }
