@@ -11,5 +11,5 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/stack/questions/{classification}", controllers.GetStackQuestionsByClassification)
 	http.Handle("/", r)
-	http.ListenAndServe(":4000", nil)
+	http.ListenAndServe("0.0.0.0:4000", nil)
 }
