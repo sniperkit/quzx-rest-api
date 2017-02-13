@@ -26,3 +26,14 @@ func GetStackQuestionsByClassification(classification string) ([]*StackQuestion,
 
 	return result, err
 }
+
+
+func SetStackQuestionAsReaded(question_id int) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("UPDATE StackQuestions SET READED = 1 WHERE QuestionId = $1", question_id)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}

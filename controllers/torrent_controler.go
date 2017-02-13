@@ -65,7 +65,5 @@ func SetTorrentNewsAsReaded (w http.ResponseWriter, r *http.Request) {
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
 	}
-
-
 }
 

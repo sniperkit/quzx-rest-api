@@ -30,3 +30,25 @@ func GetStackQuestionsByClassification(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
+
+type SetStackQuestionAsReadedStruct struct {
+	QuestionId int `json:"questionid"`
+}
+
+func SetStackQuestionAsReaded (w http.ResponseWriter, r *http.Request) {
+
+	bodyData := new(SetStackQuestionAsReadedStruct)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&bodyData)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		model.SetStackQuestionAsReaded(bodyData.QuestionId)
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(bodyData)
+		w.Write(resp)
+	}
+}
+
