@@ -12,6 +12,7 @@ func main() {
 	r.HandleFunc("/api/stack/questions/{classification}", controllers.GetStackQuestionsByClassification)
 	r.HandleFunc("/api/feeds/unread", controllers.GetUnreadedTorrentFeeds)
 	r.HandleFunc("/api/feeds/{feed_id}/news", controllers.GetUnreadedNewsByFeed)
+	r.HandleFunc("/api/news/as-read", controllers.SetTorrentNewsAsReaded).Methods("POST")
 	http.Handle("/", r)
 	http.ListenAndServe("0.0.0.0:4000", nil)
 }

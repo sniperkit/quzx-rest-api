@@ -46,3 +46,26 @@ func GetUnreadedNewsByFeed(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type SetTorrentAsReaded struct {
+	Id int `json:"id"`
+}
+
+func SetTorrentNewsAsReaded (w http.ResponseWriter, r *http.Request) {
+
+	bodyData := new(SetTorrentAsReaded)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&bodyData)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		model.SetTorrentNewsAsReaded(bodyData.Id)
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(bodyData)
+		w.Write(resp)
+	}
+
+
+}
+

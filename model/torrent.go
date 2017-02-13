@@ -53,3 +53,13 @@ func GetUnreadedNewsByFeed(feed_id int) ([]*TorrentNews, error) {
 
 	return result, err
 }
+
+func SetTorrentNewsAsReaded(news_id int) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("UPDATE News SET READED = 1 WHERE Id = $1", news_id)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}
