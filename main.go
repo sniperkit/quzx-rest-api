@@ -36,6 +36,11 @@ func main() {
 	r.HandleFunc("/api/news/as-read", controllers.SetTorrentNewsAsReaded).Methods("POST")
 	r.HandleFunc("/api/stack/question-as-read", controllers.SetStackQuestionAsReaded).Methods("POST")
 
+	// rss
+	r.HandleFunc("/api/rss/unread", controllers.GetUnreadedRssFeeds)
+	r.HandleFunc("/api/rss/{feed_id}/items", controllers.GetRssItemsByFeedId)
+	r.HandleFunc("/api/rss/as-read", controllers.SetRssItemAsReaded).Methods("POST")
+
 	http.Handle("/", &WithCORS{r})
 	http.ListenAndServe("0.0.0.0:4000", nil)
 }
