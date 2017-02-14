@@ -8,6 +8,7 @@ type RssFeed struct {
 	Description string
 	Link string
 	ImageUrl string
+	AlternativeName string
 }
 
 type RssItem struct {
@@ -23,14 +24,14 @@ type RssItem struct {
 func GetUnreadedRssFeeds() ([]*RssFeed, error) {
 
 	result := []*RssFeed{}
-	rows, err := db.Query("SELECT Id, Title, Description, Link, ImageUrl FROM RssFeed")
+	rows, err := db.Query("SELECT Id, Title, Description, Link, ImageUrl, AlternativeName FROM RssFeed")
 
 	if err != nil {
 		log.Println(err)
 	} else {
 		for rows.Next() {
 			f := RssFeed{}
-			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.ImageUrl)
+			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.ImageUrl, &f.AlternativeName)
 			result = append(result, &f)
 		}
 	}
