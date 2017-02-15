@@ -43,8 +43,11 @@ func main() {
 
 	// rss
 	r.HandleFunc("/api/rss/unread", controllers.GetUnreadedRssFeeds)
-	r.HandleFunc("/api/rss/{feed_id}/items", controllers.GetRssItemsByFeedId)
+	r.HandleFunc("/api/rss/unread", controllers.GetUnreadedRssFeeds)
 	r.HandleFunc("/api/rss/as-read", controllers.SetRssItemAsReaded).Methods("POST")
+
+	// twitter
+	r.HandleFunc("/api/twitter/favorites/{name}", controllers.GetTwitterFavourites)
 
 	http.Handle("/", &WithCORS{r})
 	http.ListenAndServe("0.0.0.0:4000", nil)
