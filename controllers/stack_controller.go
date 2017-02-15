@@ -8,6 +8,21 @@ import (
 	"encoding/json"
 )
 
+func GetStackTags(w http.ResponseWriter, r *http.Request) {
+
+	tags, err := model.GetStackTags()
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(tags)
+		w.Write(resp)
+	}
+}
+
+
 func GetStackQuestionsByClassification(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)

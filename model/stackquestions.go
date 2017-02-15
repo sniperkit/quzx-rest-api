@@ -9,6 +9,29 @@ type StackQuestion struct {
 	Tags string `json:"tags"`
 }
 
+type StackTag struct {
+	Classification string
+	Unreaded int
+}
+
+func GetStackTags() ([]*StackTag, error) {
+
+	result := []*StackTag{}
+	rows, err := db.Query("SELECT Classification, Unreaded FROM StackTags WHERE Unreaded > 0")
+
+	if err != nil {
+		log.Println(err)
+	} else {
+		for rows.Next() {
+			q := StackTag{}
+			rows.Scan(&q.Classification, &q.Unreaded)
+			result = append(result, &q)
+		}
+	}
+
+	return result, err
+}
+
 func GetStackQuestionsByClassification(classification string) ([]*StackQuestion, error) {
 
 	result := []*StackQuestion{}

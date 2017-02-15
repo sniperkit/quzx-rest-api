@@ -30,11 +30,16 @@ func (s *WithCORS) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 func main() {
 
 	r := mux.NewRouter()
+
+	// stack
+	r.HandleFunc("/api/stack/tags", controllers.GetStackTags)
 	r.HandleFunc("/api/stack/questions/{classification}", controllers.GetStackQuestionsByClassification)
+	r.HandleFunc("/api/stack/question-as-read", controllers.SetStackQuestionAsReaded).Methods("POST")
+
+	// torrents
 	r.HandleFunc("/api/feeds/unread", controllers.GetUnreadedTorrentFeeds)
 	r.HandleFunc("/api/feeds/{feed_id}/news", controllers.GetUnreadedNewsByFeed)
 	r.HandleFunc("/api/news/as-read", controllers.SetTorrentNewsAsReaded).Methods("POST")
-	r.HandleFunc("/api/stack/question-as-read", controllers.SetStackQuestionAsReaded).Methods("POST")
 
 	// rss
 	r.HandleFunc("/api/rss/unread", controllers.GetUnreadedRssFeeds)
