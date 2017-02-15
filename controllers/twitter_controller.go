@@ -30,3 +30,25 @@ func GetTwitterFavourites(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+
+type SetTwitUnfavoriteStruct struct {
+	Id int64 `json:"id"`
+}
+
+func SetTwitUnfavorite (w http.ResponseWriter, r *http.Request) {
+
+	bodyData := new(SetTwitUnfavoriteStruct)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&bodyData)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		services.DestroyFavorites(bodyData.Id)
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(bodyData)
+		w.Write(resp)
+	}
+}
