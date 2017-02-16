@@ -7,6 +7,7 @@ type StackQuestion struct {
 	Link string `json:"link"`
 	QuestionId int `json:"questionid"`
 	Tags string `json:"tags"`
+	CreationDate int64 `json:"creationdate"`
 }
 
 type StackTag struct {
@@ -35,14 +36,14 @@ func GetStackTags() ([]*StackTag, error) {
 func GetStackQuestionsByClassification(classification string) ([]*StackQuestion, error) {
 
 	result := []*StackQuestion{}
-	rows, err := db.Query("SELECT Title, Link, QuestionId, Tags FROM StackQuestions WHERE Classification = $1 and Readed = 0", classification)
+	rows, err := db.Query("SELECT Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions WHERE Classification = $1 and Readed = 0", classification)
 
 	if err != nil {
 		log.Println(err)
 	} else {
 		for rows.Next() {
 			q := StackQuestion{}
-			rows.Scan(&q.Title, &q.Link, &q.QuestionId, &q.Tags)
+			rows.Scan(&q.Title, &q.Link, &q.QuestionId, &q.Tags, &q.CreationDate)
 			result = append(result, &q)
 		}
 	}
