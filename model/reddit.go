@@ -44,7 +44,7 @@ func GetUnreadedReddits() ([]*Reddit, error) {
 func GetRedditItemsByRedditId(feed_id int) ([]*RedditItem, error) {
 
 	result := []*RedditItem{}
-	rows, err := db.Query("SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RedditItem WHERE FeedId = $1 and Readed = 0", feed_id)
+	rows, err := db.Query("SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RedditItem WHERE FeedId = $1 and Readed = 0 ORDER BY Date DESC", feed_id)
 
 	if err != nil {
 		log.Println(err)

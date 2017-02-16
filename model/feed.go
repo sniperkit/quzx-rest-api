@@ -45,7 +45,7 @@ func GetUnreadedRssFeeds() ([]*RssFeed, error) {
 func GetRssItemsByFeedId(feed_id int) ([]*RssItem, error) {
 
 	result := []*RssItem{}
-	rows, err := db.Query("SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RssItem WHERE FeedId = $1 and Readed = 0", feed_id)
+	rows, err := db.Query("SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RssItem WHERE FeedId = $1 and Readed = 0 ORDER BY Date DESC", feed_id)
 
 	if err != nil {
 		log.Println(err)

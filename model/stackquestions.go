@@ -36,7 +36,7 @@ func GetStackTags() ([]*StackTag, error) {
 func GetStackQuestionsByClassification(classification string) ([]*StackQuestion, error) {
 
 	result := []*StackQuestion{}
-	rows, err := db.Query("SELECT Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions WHERE Classification = $1 and Readed = 0", classification)
+	rows, err := db.Query("SELECT Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions WHERE Classification = $1 and Readed = 0 ORDER BY CreationDate DESC", classification)
 
 	if err != nil {
 		log.Println(err)
