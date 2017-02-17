@@ -11,7 +11,9 @@ import (
 
 func GetUnreadedRssFeeds(w http.ResponseWriter, r *http.Request) {
 
-	feeds, err := model.GetUnreadedRssFeeds()
+	vars := mux.Vars(r)
+	rss_type, err :=  strconv.Atoi(vars["rss_type"])
+	feeds, err := model.GetUnreadedRssFeeds(rss_type)
 
 	if err != nil {
 		log.Println(err)

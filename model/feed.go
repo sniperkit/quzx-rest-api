@@ -11,6 +11,7 @@ type RssFeed struct {
 	AlternativeName string
 	Total int
 	Unreaded int
+	RssType int
 }
 
 type RssItem struct {
@@ -23,10 +24,10 @@ type RssItem struct {
 	Date int64
 }
 
-func GetUnreadedRssFeeds() ([]*RssFeed, error) {
+func GetUnreadedRssFeeds(rssType int) ([]*RssFeed, error) {
 
 	result := []*RssFeed{}
-	rows, err := db.Query("SELECT Id, Title, Description, Link, ImageUrl, AlternativeName, Total, Unreaded FROM RssFeed WHERE Unreaded > 0")
+	rows, err := db.Query("SELECT Id, Title, Description, Link, ImageUrl, AlternativeName, Total, Unreaded FROM RssFeed WHERE RssType = $1 AND Unreaded > 0", rssType)
 
 	if err != nil {
 		log.Println(err)

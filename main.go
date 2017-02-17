@@ -42,7 +42,7 @@ func main() {
 	r.HandleFunc("/api/news/as-read", controllers.SetTorrentNewsAsReaded).Methods("POST")
 
 	// rss
-	r.HandleFunc("/api/rss/unread", controllers.GetUnreadedRssFeeds)
+	r.HandleFunc("/api/rss/unread/{rss_type}", controllers.GetUnreadedRssFeeds)
 	r.HandleFunc("/api/rss/{feed_id}/items", controllers.GetRssItemsByFeedId)
 	r.HandleFunc("/api/rss/as-read", controllers.SetRssItemAsReaded).Methods("POST")
 
