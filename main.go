@@ -46,11 +46,6 @@ func main() {
 	r.HandleFunc("/api/rss/{feed_id}/items", controllers.GetRssItemsByFeedId)
 	r.HandleFunc("/api/rss/as-read", controllers.SetRssItemAsReaded).Methods("POST")
 
-	// reddit
-	r.HandleFunc("/api/reddit/unread", controllers.GetUnreadedReddits)
-	r.HandleFunc("/api/reddit/{feed_id}/items", controllers.GetRedditItemsByRedditId)
-	r.HandleFunc("/api/reddit/as-read", controllers.SetRedditItemAsReaded).Methods("POST")
-
 	// twitter
 	r.HandleFunc("/api/twitter/favorites/{name}", controllers.GetTwitterFavourites)
 	r.HandleFunc("/api/twitter/unfavorite", controllers.SetTwitUnfavorite).Methods("POST")
