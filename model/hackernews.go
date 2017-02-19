@@ -18,7 +18,7 @@ func GetUnreadedHackerNews() ([]*HackerNews, error) {
 
 	result := []*HackerNews{}
 	rows, err := db.Query("SELECT Id, By, Score, Time, Title, Type, Url, Readed " +
-		"FROM HackerNews WHERE Readed = 0")
+		"FROM HackerNews WHERE Readed = 0 ORDER BY TIME DESC")
 
 	if err != nil {
 		log.Println(err)
