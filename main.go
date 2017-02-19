@@ -50,6 +50,10 @@ func main() {
 	r.HandleFunc("/api/twitter/favorites/{name}", controllers.GetTwitterFavourites)
 	r.HandleFunc("/api/twitter/unfavorite", controllers.SetTwitUnfavorite).Methods("POST")
 
+	// hacker news
+	r.HandleFunc("/api/hn/unread", controllers.GetUnreadedHackerNews)
+	r.HandleFunc("/api/hn/as-read", controllers.SetHackerNewsAsReaded).Methods("POST")
+
 	http.Handle("/", &WithCORS{r})
 	http.ListenAndServe("0.0.0.0:4000", nil)
 }
