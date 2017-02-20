@@ -6,6 +6,7 @@ import (
 	"github.com/demas/cowl-services/routers"
 	"github.com/rs/cors"
 	"github.com/demas/cowl-services/controllers"
+	"os"
 )
 
 func main() {
@@ -29,5 +30,5 @@ func main() {
 	server := negroni.Classic()
 	server.Use(c)
 	server.UseHandler(router)
-	server.Run("0.0.0.0:4000")
+	server.Run("0.0.0.0:" + os.Getenv("PORT"))
 }
