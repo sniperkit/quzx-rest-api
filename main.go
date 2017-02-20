@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 	"github.com/gorilla/mux"
-	"github.com/demas/cowl-services/controllers"
+	"github.com/demas/cowl-services/routers"
 )
 
 type WithCORS struct {
@@ -29,31 +29,7 @@ func (s *WithCORS) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 func main() {
 
-	r := mux.NewRouter()
-
-	// stack
-	r.HandleFunc("/api/stack/tags", controllers.GetStackTags)
-	r.HandleFunc("/api/stack/questions/{classification}", controllers.GetStackQuestionsByClassification)
-	r.HandleFunc("/api/stack/question-as-read", controllers.SetStackQuestionAsReaded).Methods("POST")
-
-	// torrents
-	r.HandleFunc("/api/feeds/unread", controllers.GetUnreadedTorrentFeeds)
-	r.HandleFunc("/api/feeds/{feed_id}/news", controllers.GetUnreadedNewsByFeed)
-	r.HandleFunc("/api/news/as-read", controllers.SetTorrentNewsAsReaded).Methods("POST")
-
-	// rss
-	r.HandleFunc("/api/rss/unread/{rss_type}", controllers.GetUnreadedRssFeeds)
-	r.HandleFunc("/api/rss/{feed_id}/items", controllers.GetRssItemsByFeedId)
-	r.HandleFunc("/api/rss/as-read", controllers.SetRssItemAsReaded).Methods("POST")
-
-	// twitter
-	r.HandleFunc("/api/twitter/favorites/{name}", controllers.GetTwitterFavourites)
-	r.HandleFunc("/api/twitter/unfavorite", controllers.SetTwitUnfavorite).Methods("POST")
-
-	// hacker news
-	r.HandleFunc("/api/hn/unread", controllers.GetUnreadedHackerNews)
-	r.HandleFunc("/api/hn/as-read", controllers.SetHackerNewsAsReaded).Methods("POST")
-
-	http.Handle("/", &WithCORS{r})
+	router := routers.InitRoutes()
+	http.Handle("/", &WithCORS{router})
 	http.ListenAndServe("0.0.0.0:4000", nil)
 }
