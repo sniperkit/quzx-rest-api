@@ -5,9 +5,8 @@ import (
 	"github.com/demas/cowl-services/controllers"
 )
 
-func SetAuthenticationRoutes(router *mux.Router) *mux.Router {
+func SetAuthRoute(router *mux.Router) *mux.Router {
 
 	router.HandleFunc("/token-auth", controllers.Login).Methods("POST")
-
 	return router
 }
