@@ -23,6 +23,7 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/rss/unread/{rss_type}", controllers.GetUnreadedRssFeeds)
 	router.HandleFunc("/rss/{feed_id}/items", controllers.GetRssItemsByFeedId)
 	router.HandleFunc("/rss/as-read", controllers.SetRssItemAsReaded).Methods("POST")
+	router.HandleFunc("/rss/{feed_id}/as-read", controllers.SetRssFeedAsReaded).Methods("POST")
 
 	// twitter
 	router.HandleFunc("/twitter/favorites/{name}", controllers.GetTwitterFavourites)

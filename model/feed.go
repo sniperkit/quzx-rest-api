@@ -71,3 +71,13 @@ func SetRssItemAsReaded(id int) {
 	}
 	tx.Commit()
 }
+
+func SetRssFeedAsReaded(feedId int) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("UPDATE RssItem SET READED = 1 WHERE FeedId = $1", feedId)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}

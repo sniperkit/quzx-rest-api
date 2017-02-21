@@ -69,4 +69,25 @@ func SetRssItemAsReaded (w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type SetRssFeedAsReadedStruct struct {
+	FeedId int `json:"feed_id"`
+}
+
+func SetRssFeedAsReaded (w http.ResponseWriter, r *http.Request) {
+
+	bodyData := new(SetRssFeedAsReadedStruct)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&bodyData)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		model.SetRssFeedAsReaded(bodyData.FeedId)
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(bodyData)
+		w.Write(resp)
+	}
+}
+
 
