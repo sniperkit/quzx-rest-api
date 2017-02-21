@@ -41,3 +41,11 @@ func SetHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
 		w.Write(resp)
 	}
 }
+
+func SetAllHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
+
+	model.SetAllHackerNewsAsReaded()
+	w.Header().Add("Content-Type", "application/json")
+	resp, _ := json.Marshal("{'result': 'ok'")
+	w.Write(resp)
+}

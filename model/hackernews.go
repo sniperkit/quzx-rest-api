@@ -43,3 +43,13 @@ func SetHackerNewsAsReaded(id int64) {
 	tx.Commit()
 }
 
+func SetAllHackerNewsAsReaded() {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("UPDATE HackerNews SET READED = 1")
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}
+
