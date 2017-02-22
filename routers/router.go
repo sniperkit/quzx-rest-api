@@ -14,13 +14,8 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/stack/questions/{classification}", controllers.GetStackQuestionsByClassification)
 	router.HandleFunc("/stack/question-as-read", controllers.SetStackQuestionAsReaded).Methods("POST")
 
-	// torrents
-	router.HandleFunc("/feeds/unread", controllers.GetUnreadedTorrentFeeds)
-	router.HandleFunc("/feeds/{feed_id}/news", controllers.GetUnreadedNewsByFeed)
-	router.HandleFunc("/news/as-read", controllers.SetTorrentNewsAsReaded).Methods("POST")
-
 	// rss
-	router.HandleFunc("/rss/unread/{rss_type}", controllers.GetUnreadedRssFeeds)
+	router.HandleFunc("/rss/unread/{rss_type}/{only_unreaded}", controllers.GetRssFeeds)
 	router.HandleFunc("/rss/{feed_id}/items", controllers.GetRssItemsByFeedId)
 	router.HandleFunc("/rss/item/as-read", controllers.SetRssItemAsReaded).Methods("POST")
 	router.HandleFunc("/rss/feed/as-read", controllers.SetRssFeedAsReaded).Methods("POST")

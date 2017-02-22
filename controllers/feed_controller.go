@@ -9,11 +9,19 @@ import (
 	"strconv"
 )
 
-func GetUnreadedRssFeeds(w http.ResponseWriter, r *http.Request) {
+func GetRssFeeds(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	rss_type, err :=  strconv.Atoi(vars["rss_type"])
-	feeds, err := model.GetUnreadedRssFeeds(rss_type)
+
+	var onlyUnreaded bool
+	if vars["only_unreaded"] == "1" {
+		onlyUnreaded = true
+	} else {
+		onlyUnreaded = false
+	}
+
+	feeds, err := model.GetRssFeeds(rss_type, onlyUnreaded)
 
 	if err != nil {
 		log.Println(err)

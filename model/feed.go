@@ -11,6 +11,7 @@ type RssFeed struct {
 	Title string
 	Description string
 	Link string
+	LastSyncTime int64
 	ImageUrl string
 	AlternativeName string
 	Total int
@@ -31,19 +32,26 @@ type RssItem struct {
 	Date int64
 }
 
-func GetUnreadedRssFeeds(rssType int) ([]*RssFeed, error) {
+func GetRssFeeds(rssType int, onlyUnreaded bool) ([]*RssFeed, error) {
 
 	result := []*RssFeed{}
-	rows, err := db.Query("SELECT Id, Title, Description, Link, ImageUrl, AlternativeName, Total, Unreaded, " +
-		"RssType, ShowContent, ShowOrder, Folder " +
-		"FROM RssFeed WHERE RssType = $1 AND Unreaded > 0", rssType)
+	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
+				              "AlternativeName, Total, Unreaded, " +
+		                              "RssType, ShowContent, ShowOrder, Folder " +
+		                              "FROM RssFeed WHERE RssType = %d", rssType)
+	if onlyUnreaded {
+		query = query + " AND Unreaded > 0"
+	}
+
+	rows, err := db.Query(query)
 
 	if err != nil {
 		log.Println(err)
 	} else {
 		for rows.Next() {
 			f := RssFeed{}
-			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.ImageUrl, &f.AlternativeName, &f.Total,
+			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.LastSyncTime,
+				&f.ImageUrl, &f.AlternativeName, &f.Total,
 				&f.Unreaded, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder)
 			result = append(result, &f)
 		}
