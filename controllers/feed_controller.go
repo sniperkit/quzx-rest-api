@@ -9,19 +9,12 @@ import (
 	"strconv"
 )
 
-func GetRssFeeds(w http.ResponseWriter, r *http.Request) {
+func GetUnreadRssFeeds(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	rss_type, err :=  strconv.Atoi(vars["rss_type"])
 
-	var onlyUnreaded bool
-	if vars["only_unreaded"] == "1" {
-		onlyUnreaded = true
-	} else {
-		onlyUnreaded = false
-	}
-
-	feeds, err := model.GetRssFeeds(rss_type, onlyUnreaded)
+	feeds, err := model.GetUnreadRssFeeds(rss_type)
 
 	if err != nil {
 		log.Println(err)
@@ -32,6 +25,21 @@ func GetRssFeeds(w http.ResponseWriter, r *http.Request) {
 		w.Write(resp)
 	}
 }
+
+func GetAllRssFeeds(w http.ResponseWriter, r *http.Request) {
+
+	feeds, err := model.GetAllRssFeeds()
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(feeds)
+		w.Write(resp)
+	}
+}
+
 
 func GetRssItemsByFeedId(w http.ResponseWriter, r *http.Request) {
 

@@ -32,16 +32,37 @@ type RssItem struct {
 	Date int64
 }
 
-func GetRssFeeds(rssType int, onlyUnreaded bool) ([]*RssFeed, error) {
+func GetAllRssFeeds() ([]*RssFeed, error) {
+
+	result := []*RssFeed{}
+	rows, err := db.Query("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
+		                     "AlternativeName, Total, Unreaded, " +
+		                     "RssType, ShowContent, ShowOrder, Folder " +
+		                     "FROM RssFeed")
+
+	if err != nil {
+		log.Println(err)
+	} else {
+		for rows.Next() {
+			f := RssFeed{}
+			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.LastSyncTime,
+				&f.ImageUrl, &f.AlternativeName, &f.Total,
+				&f.Unreaded, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder)
+			result = append(result, &f)
+		}
+	}
+
+	return result, err
+}
+
+
+func GetUnreadRssFeeds(rssType int) ([]*RssFeed, error) {
 
 	result := []*RssFeed{}
 	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
 				              "AlternativeName, Total, Unreaded, " +
 		                              "RssType, ShowContent, ShowOrder, Folder " +
-		                              "FROM RssFeed WHERE RssType = %d", rssType)
-	if onlyUnreaded {
-		query = query + " AND Unreaded > 0"
-	}
+		                              "FROM RssFeed WHERE RssType = %d AND Unreaded > 0", rssType)
 
 	rows, err := db.Query(query)
 
