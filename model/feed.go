@@ -82,6 +82,34 @@ func GetUnreadRssFeeds(rssType int) ([]*RssFeed, error) {
 }
 
 
+func GetRssFeedById(id int) (RssFeed, error) {
+
+	var result RssFeed
+	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
+		                     "AlternativeName, Total, Unreaded, RssType, ShowContent, ShowOrder, Folder " +
+		                     "FROM RssFeed WHERE Id = %d", id)
+	err := db.Get(&result, query)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	return result, err
+}
+
+func UpdateRssFeed(feed *RssFeed) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("UPDATE RssFeed SET Link = $1, LastSynctime = $2, AlternativeName = $3, " +
+				 "RssType = $4, ShowContent = $5, ShowOrder = $6, Folder = $7 WHERE Id = $8",
+				 feed.Link, feed.LastSyncTime, feed.AlternativeName, feed.RssType, feed.ShowContent,
+				 feed.ShowOrder, feed.Folder, feed.Id)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}
+
 func GetRssItemsByFeedId(feed_id int) ([]*RssItem, error) {
 
 	var showOrder int
