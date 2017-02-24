@@ -74,6 +74,23 @@ func PutRssFeed(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func PostRssFeed(w http.ResponseWriter, r *http.Request) {
+
+	bodyData := new(model.RssFeed)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&bodyData)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		model.InsertRssFeed(bodyData)
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(bodyData)
+		w.Write(resp)
+	}
+}
+
 func GetRssItemsByFeedId(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)

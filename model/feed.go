@@ -16,6 +16,7 @@ type RssFeed struct {
 	AlternativeName string
 	Total int
 	Unreaded int
+	SyncInterval int
 	RssType int
 	ShowContent int
 	ShowOrder int
@@ -86,7 +87,7 @@ func GetRssFeedById(id int) (RssFeed, error) {
 
 	var result RssFeed
 	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
-		                     "AlternativeName, Total, Unreaded, RssType, ShowContent, ShowOrder, Folder " +
+		                     "AlternativeName, Total, Unreaded, SyncInterval, RssType, ShowContent, ShowOrder, Folder " +
 		                     "FROM RssFeed WHERE Id = %d", id)
 	err := db.Get(&result, query)
 
@@ -100,7 +101,7 @@ func GetRssFeedById(id int) (RssFeed, error) {
 func UpdateRssFeed(feed *RssFeed) {
 
 	tx := db.MustBegin()
-	_, err := tx.Exec("UPDATE RssFeed SET Link = $1, LastSynctime = $2, AlternativeName = $3, " +
+	_, err := tx.Exec("UPDATE RssFeed SET Link = $1, LastSyncTime = $2, AlternativeName = $3, " +
 				 "RssType = $4, ShowContent = $5, ShowOrder = $6, Folder = $7 WHERE Id = $8",
 				 feed.Link, feed.LastSyncTime, feed.AlternativeName, feed.RssType, feed.ShowContent,
 				 feed.ShowOrder, feed.Folder, feed.Id)
@@ -109,6 +110,19 @@ func UpdateRssFeed(feed *RssFeed) {
 	}
 	tx.Commit()
 }
+
+func InsertRssFeed(feed *RssFeed) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("INSERT INTO RssFeed(Link, SyncInterval, LastSyncTime, AlternativeName, RssType, ShowContent, ShowOrder) " +
+		"VALUES ($1, $2, $3, $4, $5, $6, $7)", feed.Link, feed.SyncInterval, 0, feed.AlternativeName, feed.RssType,
+		feed.ShowContent, feed.ShowOrder)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}
+
 
 func GetRssItemsByFeedId(feed_id int) ([]*RssItem, error) {
 
