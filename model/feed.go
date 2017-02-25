@@ -114,9 +114,9 @@ func UpdateRssFeed(feed *RssFeed) {
 func InsertRssFeed(feed *RssFeed) {
 
 	tx := db.MustBegin()
-	_, err := tx.Exec("INSERT INTO RssFeed(Link, SyncInterval, LastSyncTime, AlternativeName, RssType, ShowContent, ShowOrder) " +
-		"VALUES ($1, $2, $3, $4, $5, $6, $7)", feed.Link, feed.SyncInterval, 0, feed.AlternativeName, feed.RssType,
-		feed.ShowContent, feed.ShowOrder)
+	_, err := tx.Exec("INSERT INTO RssFeed(Link, SyncInterval, LastSyncTime, AlternativeName, RssType, ShowContent, ShowOrder, Folder) " +
+		"VALUES ($1, $2, $3, $4, $5, $6, $7, $8)", feed.Link, feed.SyncInterval, 0, feed.AlternativeName, feed.RssType,
+		feed.ShowContent, feed.ShowOrder, feed.Folder)
 	if err != nil {
 		log.Println(err)
 	}
