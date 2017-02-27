@@ -42,6 +42,27 @@ func SetHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type SetHackerNewsAsReadedFromTimeStruct struct {
+	FromTime int64 `json:"fromTime"`
+}
+
+func SetHackerNewsAsReadedFromTime (w http.ResponseWriter, r *http.Request) {
+
+	bodyData := new(SetHackerNewsAsReadedFromTimeStruct)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&bodyData)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		model.SetHackerNewsAsReadedFromTime(bodyData.FromTime)
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(bodyData)
+		w.Write(resp)
+	}
+}
+
 func SetAllHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
 
 	model.SetAllHackerNewsAsReaded()

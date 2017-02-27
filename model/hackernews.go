@@ -43,6 +43,16 @@ func SetHackerNewsAsReaded(id int64) {
 	tx.Commit()
 }
 
+func SetHackerNewsAsReadedFromTime(t int64) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("UPDATE HackerNews SET READED = 1 WHERE Time < $1", t)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}
+
 func SetAllHackerNewsAsReaded() {
 
 	tx := db.MustBegin()

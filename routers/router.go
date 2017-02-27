@@ -33,6 +33,7 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/hn/unread", controllers.GetUnreadedHackerNews)
 	router.HandleFunc("/hn/as-read", controllers.SetHackerNewsAsReaded).Methods("POST")
 	router.HandleFunc("/hn/all-as-read", controllers.SetAllHackerNewsAsReaded).Methods("POST")
+	router.HandleFunc("/hn/fromtime-as-read", controllers.SetHackerNewsAsReadedFromTime).Methods("POST")
 
 	return router
 }
