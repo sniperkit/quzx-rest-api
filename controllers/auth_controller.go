@@ -32,7 +32,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := make(jwt.MapClaims)
 	claims["iss"] = "admin"
-	claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 60 * 8).Unix()
 	token.Claims = claims
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
