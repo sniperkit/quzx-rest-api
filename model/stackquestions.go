@@ -3,6 +3,7 @@ package model
 import "log"
 
 type StackQuestion struct {
+	id int `json:"id"`
 	Title string `json:"title"`
 	Link string `json:"link"`
 	QuestionId int `json:"questionid"`
@@ -36,7 +37,8 @@ func GetStackTags() ([]*StackTag, error) {
 func GetStackQuestionsByClassification(classification string) ([]*StackQuestion, error) {
 
 	result := []*StackQuestion{}
-	rows, err := db.Query("SELECT Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions WHERE Classification = $1 and Readed = 0 ORDER BY CreationDate DESC LIMIT 15", classification)
+	rows, err := db.Query("SELECT Id, Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions " +
+		"WHERE Classification = $1 and Readed = 0 ORDER BY CreationDate DESC LIMIT 15", classification)
 
 	if err != nil {
 		log.Println(err)
