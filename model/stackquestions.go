@@ -3,7 +3,7 @@ package model
 import "log"
 
 type StackQuestion struct {
-	id int `json:"id"`
+	Id int `json:"id"`
 	Title string `json:"title"`
 	Link string `json:"link"`
 	QuestionId int `json:"questionid"`
@@ -45,7 +45,7 @@ func GetStackQuestionsByClassification(classification string) ([]*StackQuestion,
 	} else {
 		for rows.Next() {
 			q := StackQuestion{}
-			rows.Scan(&q.Title, &q.Link, &q.QuestionId, &q.Tags, &q.CreationDate)
+			rows.Scan(&q.Id, &q.Title, &q.Link, &q.QuestionId, &q.Tags, &q.CreationDate)
 			result = append(result, &q)
 		}
 	}
