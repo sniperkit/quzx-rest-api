@@ -35,5 +35,10 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/hn/all-as-read", controllers.SetAllHackerNewsAsReaded).Methods("POST")
 	router.HandleFunc("/hn/fromtime-as-read", controllers.SetHackerNewsAsReadedFromTime).Methods("POST")
 
+	// tags
+	router.HandleFunc("/tags", controllers.GetTags)
+	router.HandleFunc("/tags/items/{tagId}", controllers.GetTaggedItemsByTagId)
+	router.HandleFunc("/tags/add-item", controllers.InsertTaggedItem).Methods("POST")
+
 	return router
 }
