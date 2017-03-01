@@ -62,4 +62,15 @@ func InsertTaggedItem (w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func DeleteTaggedItem(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	id, _ :=  strconv.Atoi(vars["id"])
+
+	model.DeleteTaggedItem(id)
+
+	w.Header().Add("Content-Type", "application/json")
+	resp, _ := json.Marshal("'result':'ok'")
+	w.Write(resp)
+}
 

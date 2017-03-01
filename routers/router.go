@@ -37,8 +37,9 @@ func InitRoutes() *mux.Router {
 
 	// tags
 	router.HandleFunc("/tags", controllers.GetTags)
-	router.HandleFunc("/tags/items/{tagId}", controllers.GetTaggedItemsByTagId)
+	router.HandleFunc("/tags/items/{tagId}", controllers.GetTaggedItemsByTagId).Methods("GET")
 	router.HandleFunc("/tags/add-item", controllers.InsertTaggedItem).Methods("POST")
+	router.HandleFunc("/tags/items/{id}", controllers.DeleteTaggedItem).Methods("DELETE")
 
 	return router
 }

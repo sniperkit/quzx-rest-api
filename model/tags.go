@@ -79,3 +79,13 @@ func InsertTaggedItemFromStockItem(questionId int, tagId int) {
 	}
 	tx.Commit()
 }
+
+func DeleteTaggedItem(id int) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("DELETE FROM TaggedItems WHERE Id = $1", id)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}
