@@ -13,6 +13,8 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/stack/tags", controllers.GetStackTags)
 	router.HandleFunc("/stack/questions/{classification}", controllers.GetStackQuestionsByClassification)
 	router.HandleFunc("/stack/question-as-read", controllers.SetStackQuestionAsReaded).Methods("POST")
+	router.HandleFunc("/stack/tags/as-read", controllers.SetStackQuestionsAsReaded).Methods("POST")
+	router.HandleFunc("/stack/tags/from-time/as-read", controllers.SetStackQuestionsAsReadedFromTime).Methods("POST")
 
 	// rss
 	router.HandleFunc("/rss/unread/{rss_type}", controllers.GetUnreadRssFeeds)

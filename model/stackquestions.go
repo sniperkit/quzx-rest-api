@@ -63,3 +63,25 @@ func SetStackQuestionAsReaded(question_id int) {
 	}
 	tx.Commit()
 }
+
+
+func SetStackQuestionsAsReadedByClassification(classification string) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("UPDATE StackQuestions SET READED = 1 WHERE Classification = $1", classification)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}
+
+func SetStackQuestionsAsReadedByClassificationFromTime(classification string, t int64) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("UPDATE StackQuestions SET READED = 1 " +
+		"WHERE Classification = $1 AND CreationDate < $2", classification, t)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}

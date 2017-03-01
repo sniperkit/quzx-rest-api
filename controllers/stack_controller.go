@@ -67,3 +67,43 @@ func SetStackQuestionAsReaded (w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type UniversalPostStruct struct {
+	Id int `json:"id"`
+	FromTime int64 `json:"fromTime"`
+	Tag string `json:"tag"`
+}
+
+func SetStackQuestionsAsReaded (w http.ResponseWriter, r *http.Request) {
+
+	bodyData := new(UniversalPostStruct)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&bodyData)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		model.SetStackQuestionsAsReadedByClassification(bodyData.Tag)
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(bodyData)
+		w.Write(resp)
+	}
+}
+
+func SetStackQuestionsAsReadedFromTime (w http.ResponseWriter, r *http.Request) {
+
+	bodyData := new(UniversalPostStruct)
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&bodyData)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	} else {
+		model.SetStackQuestionsAsReadedByClassificationFromTime(bodyData.Tag, bodyData.FromTime)
+		w.Header().Add("Content-Type", "application/json")
+		resp, _ := json.Marshal(bodyData)
+		w.Write(resp)
+	}
+}
+
