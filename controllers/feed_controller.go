@@ -156,4 +156,17 @@ func SetRssFeedAsReaded (w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func Unsubscribe (w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	feedid, _ :=  strconv.Atoi(vars["id"])
+
+	model.UnsubscribeRssFeed(feedid)
+
+	w.Header().Add("Content-Type", "application/json")
+	resp, _ := json.Marshal("'result':'ok'")
+	w.Write(resp)
+}
+
+
 

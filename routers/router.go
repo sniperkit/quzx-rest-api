@@ -21,9 +21,10 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/rss/item/as-read", controllers.SetRssItemAsReaded).Methods("POST")
 	router.HandleFunc("/rss/feed/as-read", controllers.SetRssFeedAsReaded).Methods("POST")
 
-	router.HandleFunc("/rss/feeds/{id}", controllers.GetRssFeedById)
+	router.HandleFunc("/rss/feeds/{id}", controllers.GetRssFeedById).Methods("GET")
 	router.HandleFunc("/rss/feeds", controllers.PutRssFeed).Methods("PUT")
 	router.HandleFunc("/rss/feeds", controllers.PostRssFeed).Methods("POST")
+	router.HandleFunc("/rss/feeds/{id}", controllers.Unsubscribe).Methods("DELETE")
 
 	// twitter
 	router.HandleFunc("/twitter/favorites/{name}", controllers.GetTwitterFavourites)

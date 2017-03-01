@@ -175,3 +175,17 @@ func SetRssFeedAsReaded(feedId int) {
 	}
 	tx.Commit()
 }
+
+func UnsubscribeRssFeed(feedId int) {
+
+	tx := db.MustBegin()
+	_, err := tx.Exec("DELETE RssItem WHERE FeedId = $1", feedId)
+	if err != nil {
+		log.Println(err)
+	}
+	_, err = tx.Exec("DELETE RssFeed WHERE Id = $1", feedId)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}
