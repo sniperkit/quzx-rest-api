@@ -43,6 +43,7 @@ func GetTaggedItemsByTagId(w http.ResponseWriter, r *http.Request) {
 type SetTaggedItemStruct struct {
 	ItemId int `json:"itemId"`
 	TagId int `json:"tagId"`
+	Source int `json:"source"`
 }
 
 func InsertTaggedItem (w http.ResponseWriter, r *http.Request) {
@@ -55,7 +56,12 @@ func InsertTaggedItem (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		model.InsertTaggedItemFromStockItem(bodyData.ItemId, bodyData.TagId)
+		if bodyData.Source == 1 {
+			model.InsertTaggedItemFromStockItem(bodyData.ItemId, bodyData.TagId)
+		} else if bodyData.Source == 2 {
+			model.InsertTaggedItemFromRss(bodyData.ItemId, bodyData.TagId)
+		}
+
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)

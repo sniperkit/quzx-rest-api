@@ -80,6 +80,25 @@ func InsertTaggedItemFromStockItem(questionId int, tagId int) {
 	tx.Commit()
 }
 
+func InsertTaggedItemFromRss(rssItemId int, tagId int) {
+
+	var item RssItem
+	err := db.Get(&item,
+		fmt.Sprintf("SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RssItem WHERE Id = %d", rssItemId))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tx := db.MustBegin()
+	_, err = tx.Exec("INSERT INTO TaggedItems(TagId, Title, Summary, Content, Link, Date, Source) " +
+		"VALUES ($1, $2, $3, $4, $5, $6, $7)", tagId, item.Title, item.Summary, item.Content, item.Link, item.Date, 2)
+	if err != nil {
+		log.Println(err)
+	}
+	tx.Commit()
+}
+
+
 func DeleteTaggedItem(id int) {
 
 	tx := db.MustBegin()
