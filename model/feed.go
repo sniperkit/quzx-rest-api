@@ -102,9 +102,9 @@ func UpdateRssFeed(feed *RssFeed) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("UPDATE RssFeed SET Link = $1, LastSyncTime = $2, AlternativeName = $3, " +
-				 "RssType = $4, ShowContent = $5, ShowOrder = $6, Folder = $7 WHERE Id = $8",
+				 "RssType = $4, ShowContent = $5, ShowOrder = $6, Folder = $7, SyncInterval = $8 WHERE Id = $9",
 				 feed.Link, feed.LastSyncTime, feed.AlternativeName, feed.RssType, feed.ShowContent,
-				 feed.ShowOrder, feed.Folder, feed.Id)
+				 feed.ShowOrder, feed.Folder, feed.SyncInterval, feed.Id)
 	if err != nil {
 		log.Println(err)
 	}
