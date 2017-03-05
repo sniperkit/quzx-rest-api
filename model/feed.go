@@ -61,7 +61,7 @@ func GetUnreadRssFeeds(rssType int) ([]*RssFeed, error) {
 
 	result := []*RssFeed{}
 	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
-				              "AlternativeName, Total, Unreaded, " +
+				              "AlternativeName, Total, Unreaded, SyncInterval, " +
 		                              "RssType, ShowContent, ShowOrder, Folder " +
 		                              "FROM RssFeed WHERE RssType = %d AND Unreaded > 0", rssType)
 
@@ -74,7 +74,7 @@ func GetUnreadRssFeeds(rssType int) ([]*RssFeed, error) {
 			f := RssFeed{}
 			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.LastSyncTime,
 				&f.ImageUrl, &f.AlternativeName, &f.Total,
-				&f.Unreaded, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder)
+				&f.Unreaded, &f.SyncInterval, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder)
 			result = append(result, &f)
 		}
 	}
