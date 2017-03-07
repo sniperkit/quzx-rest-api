@@ -3,11 +3,11 @@ package controllers
 import (
 	"net/http"
 	"log"
-	"github.com/demas/cowl-services/postgres"
+	"github.com/demas/cowl-services/pkg/postgres"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"strconv"
-	"github.com/demas/cowl-services/quzx"
+	"github.com/demas/cowl-services/pkg/quzx"
 )
 
 func GetUnreadRssFeeds(w http.ResponseWriter, r *http.Request) {

@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"github.com/urfave/negroni"
-	"github.com/demas/cowl-services/routers"
 	"github.com/rs/cors"
-	"github.com/demas/cowl-services/controllers"
 	"os"
+	"github.com/demas/cowl-services/pkg/routers"
+	"github.com/demas/cowl-services/pkg/controllers"
 )
 
 func main() {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/demas/cowl-services/services"
+	"github.com/demas/cowl-services/pkg/services"
 )
 
 

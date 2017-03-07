@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/demas/cowl-services/controllers"
+	"github.com/demas/cowl-services/pkg/controllers"
 )
 
 func InitRoutes() *mux.Router {

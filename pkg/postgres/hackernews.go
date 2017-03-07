@@ -1,7 +1,7 @@
 package postgres
 
 import "log"
-import "github.com/demas/cowl-services/quzx"
+import "github.com/demas/cowl-services/pkg/quzx"
 
 // represent a PostgreSQL implementation of quzx.HackerNewsService
 type HackerNewsService struct {

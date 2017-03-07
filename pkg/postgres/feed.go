@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/demas/cowl-services/quzx"
+	"github.com/demas/cowl-services/pkg/quzx"
 )
 
 // represent a PostgreSQL implementation of quzx.FeedService

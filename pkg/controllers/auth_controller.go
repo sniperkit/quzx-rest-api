@@ -5,9 +5,9 @@ import (
 	"time"
 	"log"
 	"net/http"
-	"github.com/demas/cowl-services/quzx"
 	"encoding/json"
 	"os"
+	"github.com/demas/cowl-services/pkg/quzx"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {

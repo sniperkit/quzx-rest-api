@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"github.com/gorilla/mux"
 	"log"
-	"github.com/demas/cowl-services/postgres"
+	"github.com/demas/cowl-services/pkg/postgres"
 	"encoding/json"
 )
 

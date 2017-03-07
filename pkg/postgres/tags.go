@@ -3,7 +3,7 @@ package postgres
 import (
 	"log"
 	"fmt"
-	"github.com/demas/cowl-services/quzx"
+	"github.com/demas/cowl-services/pkg/quzx"
 )
 
 // represent a PostgreSQL implementation of quzx.TagsService
