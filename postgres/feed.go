@@ -8,9 +8,12 @@ import (
 	"github.com/demas/cowl-services/quzx"
 )
 
+// represent a PostgreSQL implementation of quzx.FeedService
+type FeedService struct {
 
+}
 
-func GetAllRssFeeds() ([]*quzx.RssFeed, error) {
+func (s *FeedService) GetAllRssFeeds() ([]*quzx.RssFeed, error) {
 
 	result := []*quzx.RssFeed{}
 	rows, err := db.Query("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
@@ -34,7 +37,7 @@ func GetAllRssFeeds() ([]*quzx.RssFeed, error) {
 }
 
 
-func GetUnreadRssFeeds(rssType int) ([]*quzx.RssFeed, error) {
+func (s *FeedService) GetUnreadRssFeeds(rssType int) ([]*quzx.RssFeed, error) {
 
 	result := []*quzx.RssFeed{}
 	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
@@ -60,7 +63,7 @@ func GetUnreadRssFeeds(rssType int) ([]*quzx.RssFeed, error) {
 }
 
 
-func GetRssFeedById(id int) (quzx.RssFeed, error) {
+func (s *FeedService) GetRssFeedById(id int) (quzx.RssFeed, error) {
 
 	var result quzx.RssFeed
 	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
@@ -75,7 +78,7 @@ func GetRssFeedById(id int) (quzx.RssFeed, error) {
 	return result, err
 }
 
-func UpdateRssFeed(feed *quzx.RssFeed) {
+func (s *FeedService) UpdateRssFeed(feed *quzx.RssFeed) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("UPDATE RssFeed SET Link = $1, LastSyncTime = $2, AlternativeName = $3, " +
@@ -88,7 +91,7 @@ func UpdateRssFeed(feed *quzx.RssFeed) {
 	tx.Commit()
 }
 
-func InsertRssFeed(feed *quzx.RssFeed) {
+func (s *FeedService) InsertRssFeed(feed *quzx.RssFeed) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("INSERT INTO RssFeed(Link, SyncInterval, LastSyncTime, AlternativeName, RssType, ShowContent, ShowOrder, Folder) " +
@@ -101,7 +104,7 @@ func InsertRssFeed(feed *quzx.RssFeed) {
 }
 
 
-func GetRssItemsByFeedId(feed_id int) ([]*quzx.RssItem, error) {
+func (s *FeedService) GetRssItemsByFeedId(feed_id int) ([]*quzx.RssItem, error) {
 
 	var showOrder int
 	err := db.Get(&showOrder, fmt.Sprintf("SELECT ShowOrder FROM RssFeed WHERE Id = '%d'", feed_id))
@@ -133,7 +136,7 @@ func GetRssItemsByFeedId(feed_id int) ([]*quzx.RssItem, error) {
 	return result, err
 }
 
-func SetRssItemAsReaded(id int) {
+func (s *FeedService) SetRssItemAsReaded(id int) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("UPDATE RssItem SET READED = 1 WHERE Id = $1", id)
@@ -143,7 +146,7 @@ func SetRssItemAsReaded(id int) {
 	tx.Commit()
 }
 
-func SetRssFeedAsReaded(feedId int) {
+func (s *FeedService) SetRssFeedAsReaded(feedId int) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("UPDATE RssItem SET READED = 1 WHERE FeedId = $1", feedId)
@@ -153,7 +156,7 @@ func SetRssFeedAsReaded(feedId int) {
 	tx.Commit()
 }
 
-func UnsubscribeRssFeed(feedId int) {
+func (s *FeedService) UnsubscribeRssFeed(feedId int) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("DELETE FROM RssItem WHERE FeedId = $1", feedId)

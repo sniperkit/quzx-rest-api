@@ -15,7 +15,7 @@ func GetUnreadRssFeeds(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	rss_type, err :=  strconv.Atoi(vars["rss_type"])
 
-	feeds, err := postgres.GetUnreadRssFeeds(rss_type)
+	feeds, err := (&postgres.FeedService{}).GetUnreadRssFeeds(rss_type)
 
 	if err != nil {
 		log.Println(err)
@@ -29,7 +29,7 @@ func GetUnreadRssFeeds(w http.ResponseWriter, r *http.Request) {
 
 func GetAllRssFeeds(w http.ResponseWriter, r *http.Request) {
 
-	feeds, err := postgres.GetAllRssFeeds()
+	feeds, err := (&postgres.FeedService{}).GetAllRssFeeds()
 
 	if err != nil {
 		log.Println(err)
@@ -46,7 +46,7 @@ func GetRssFeedById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err :=  strconv.Atoi(vars["id"])
 
-	feed, err := postgres.GetRssFeedById(id)
+	feed, err := (&postgres.FeedService{}).GetRssFeedById(id)
 
 	if err != nil {
 		log.Println(err)
@@ -68,7 +68,7 @@ func PutRssFeed(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.UpdateRssFeed(bodyData)
+		(&postgres.FeedService{}).UpdateRssFeed(bodyData)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -85,7 +85,7 @@ func PostRssFeed(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.InsertRssFeed(bodyData)
+		(&postgres.FeedService{}).InsertRssFeed(bodyData)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -101,7 +101,7 @@ func GetRssItemsByFeedId(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error")
 		w.WriteHeader(500)
 	} else {
-		news, err := postgres.GetRssItemsByFeedId(feed_id)
+		news, err := (&postgres.FeedService{}).GetRssItemsByFeedId(feed_id)
 
 		if err != nil {
 			log.Println(err)
@@ -129,7 +129,7 @@ func SetRssItemAsReaded (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.SetRssItemAsReaded(bodyData.Id)
+		(&postgres.FeedService{}).SetRssItemAsReaded(bodyData.Id)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -150,7 +150,7 @@ func SetRssFeedAsReaded (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.SetRssFeedAsReaded(bodyData.FeedId)
+		(&postgres.FeedService{}).SetRssFeedAsReaded(bodyData.FeedId)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -162,7 +162,7 @@ func Unsubscribe (w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	feedid, _ :=  strconv.Atoi(vars["id"])
 
-	postgres.UnsubscribeRssFeed(feedid)
+	(&postgres.FeedService{}).UnsubscribeRssFeed(feedid)
 
 	w.Header().Add("Content-Type", "application/json")
 	resp, _ := json.Marshal("'result':'ok'")

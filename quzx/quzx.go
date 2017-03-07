@@ -95,3 +95,14 @@ type TaggedItem struct {
 	Source int `json:"source"`  // 1 stack
 }
 
+type FeedService interface {
+	GetAllRssFeeds() ([]*RssFeed, error)
+	GetUnreadRssFeeds(rssType int) ([]*RssFeed, error)
+	GetRssFeedById(id int) (RssFeed, error)
+	UpdateRssFeed(feed *RssFeed)
+	InsertRssFeed(feed *RssFeed)
+	GetRssItemsByFeedId(feed_id int) ([]*RssItem, error)
+	SetRssItemAsReaded(id int)
+	SetRssFeedAsReaded(feedId int)
+	UnsubscribeRssFeed(feedId int)
+}
