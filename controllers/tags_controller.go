@@ -11,7 +11,7 @@ import (
 
 func GetTags(w http.ResponseWriter, r *http.Request) {
 
-	tags, err := postgres.GetTags()
+	tags, err := (&postgres.TagsService{}).GetTags()
 
 	if err != nil {
 		log.Println(err)
@@ -28,7 +28,7 @@ func GetTaggedItemsByTagId(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tagId, err :=  strconv.Atoi(vars["tagId"])
 
-	items, err := postgres.GetTaggedItemsByTagId(tagId)
+	items, err := (&postgres.TagsService{}).GetTaggedItemsByTagId(tagId)
 
 	if err != nil {
 		log.Println(err)
@@ -57,9 +57,9 @@ func InsertTaggedItem (w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 	} else {
 		if bodyData.Source == 1 {
-			postgres.InsertTaggedItemFromStockItem(bodyData.ItemId, bodyData.TagId)
+			(&postgres.TagsService{}).InsertTaggedItemFromStockItem(bodyData.ItemId, bodyData.TagId)
 		} else if bodyData.Source == 2 {
-			postgres.InsertTaggedItemFromRss(bodyData.ItemId, bodyData.TagId)
+			(&postgres.TagsService{}).InsertTaggedItemFromRss(bodyData.ItemId, bodyData.TagId)
 		}
 
 		w.Header().Add("Content-Type", "application/json")
@@ -73,7 +73,7 @@ func DeleteTaggedItem(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ :=  strconv.Atoi(vars["id"])
 
-	postgres.DeleteTaggedItem(id)
+	(&postgres.TagsService{}).DeleteTaggedItem(id)
 
 	w.Header().Add("Content-Type", "application/json")
 	resp, _ := json.Marshal("'result':'ok'")

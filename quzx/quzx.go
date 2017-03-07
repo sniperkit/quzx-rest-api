@@ -121,3 +121,11 @@ type StackService interface {
 	SetStackQuestionsAsReadedByClassification(classification string)
 	SetStackQuestionsAsReadedByClassificationFromTime(classification string, t int64)
 }
+
+type TagsService interface {
+	GetTags() ([]*Tag, error)
+	GetTaggedItemsByTagId(tagId int) ([]*TaggedItem, error)
+	InsertTaggedItemFromStockItem(questionId int, tagId int)
+	InsertTaggedItemFromRss(rssItemId int, tagId int)
+	DeleteTaggedItem(id int)
+}
