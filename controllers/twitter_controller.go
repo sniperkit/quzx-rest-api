@@ -18,7 +18,7 @@ func GetTwitterFavourites(w http.ResponseWriter, r *http.Request) {
 		log.Println("Attept to get twitter favourites without user name")
 		w.WriteHeader(500)
 	} else {
-		tweets, err := services.GetFavoritesTwits(name)
+		tweets, err := (&services.TwitterService{}).GetFavoritesTwits(name)
 
 		if err != nil {
 			log.Println(err)
@@ -46,7 +46,7 @@ func SetTwitUnfavorite (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		services.DestroyFavorites(bodyData.Id)
+		(&services.TwitterService{}).DestroyFavorites(bodyData.Id)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)

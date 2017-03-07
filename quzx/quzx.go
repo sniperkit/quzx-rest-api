@@ -1,5 +1,7 @@
 package quzx
 
+import "github.com/ChimeraCoder/anaconda"
+
 type UserCredentials struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -61,22 +63,6 @@ type StackQuestion struct {
 	CreationDate int64 `json:"creationdate"`
 }
 
-type TorrentFeed struct {
-	Id int `json:"id"`
-	TypeId int `json:"type_id"`
-	Link string `json:"link"`
-	Title string `json:"title"`
-	Total int `json:"total"`
-	Unread int `json:"unread"`
-}
-type TorrentNews struct {
-	Id int `json:"id"`
-	FeedId int `json:"feed_id"`
-	Link string `json:"link"`
-	Title string `json:"title"`
-	Readed int `json:"readed"`
-}
-
 type Tag struct {
 	Id int `json:"id"`
 	Title string `json:"title"`
@@ -130,8 +116,7 @@ type TagsService interface {
 	DeleteTaggedItem(id int)
 }
 
-type TorrentService interface {
-	GetUnreadedTorrentFeeds() ([]*TorrentFeed, error)
-	GetUnreadedNewsByFeed(feed_id int) ([]*TorrentNews, error)
-	SetTorrentNewsAsReaded(news_id int)
+type TwitterService interface {
+	GetFavoritesTwits(name string) ([]anaconda.Tweet, error)
+	DestroyFavorites(id int64)
 }

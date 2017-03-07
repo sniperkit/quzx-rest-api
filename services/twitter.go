@@ -8,7 +8,10 @@ import (
 	"os"
 )
 
-func GetFavoritesTwits(name string) ([]anaconda.Tweet, error) {
+type TwitterService struct {
+}
+
+func (s *TwitterService) GetFavoritesTwits(name string) ([]anaconda.Tweet, error) {
 
 	consumer_key := os.Getenv("TWICONKEY")
 	consumer_secret := os.Getenv("TWICONSEC")
@@ -30,7 +33,7 @@ func GetFavoritesTwits(name string) ([]anaconda.Tweet, error) {
 	return tweets, err
 }
 
-func DestroyFavorites(id int64) {
+func (s *TwitterService) DestroyFavorites(id int64) {
 
 	consumer_key := os.Getenv("TWICONKEY")
 	consumer_secret := os.Getenv("TWICONSEC")
