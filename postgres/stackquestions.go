@@ -3,8 +3,11 @@ package postgres
 import "log"
 import "github.com/demas/cowl-services/quzx"
 
+// represent a PostgreSQL implementation of quzx.StackService
+type StackService struct {
+}
 
-func GetStackTags() ([]*quzx.StackTag, error) {
+func (s *StackService) GetStackTags() ([]*quzx.StackTag, error) {
 
 	result := []*quzx.StackTag{}
 	rows, err := db.Query("SELECT Classification, Unreaded FROM StackTags WHERE Unreaded > 0")
@@ -22,7 +25,7 @@ func GetStackTags() ([]*quzx.StackTag, error) {
 	return result, err
 }
 
-func GetStackQuestionsByClassification(classification string) ([]*quzx.StackQuestion, error) {
+func (s *StackService) GetStackQuestionsByClassification(classification string) ([]*quzx.StackQuestion, error) {
 
 	result := []*quzx.StackQuestion{}
 	rows, err := db.Query("SELECT Id, Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions " +
@@ -42,7 +45,7 @@ func GetStackQuestionsByClassification(classification string) ([]*quzx.StackQues
 }
 
 
-func SetStackQuestionAsReaded(question_id int) {
+func (s *StackService) SetStackQuestionAsReaded(question_id int) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("UPDATE StackQuestions SET READED = 1 WHERE QuestionId = $1", question_id)
@@ -53,7 +56,7 @@ func SetStackQuestionAsReaded(question_id int) {
 }
 
 
-func SetStackQuestionsAsReadedByClassification(classification string) {
+func (s *StackService) SetStackQuestionsAsReadedByClassification(classification string) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("UPDATE StackQuestions SET READED = 1 WHERE Classification = $1", classification)
@@ -63,7 +66,7 @@ func SetStackQuestionsAsReadedByClassification(classification string) {
 	tx.Commit()
 }
 
-func SetStackQuestionsAsReadedByClassificationFromTime(classification string, t int64) {
+func (s *StackService) SetStackQuestionsAsReadedByClassificationFromTime(classification string, t int64) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("UPDATE StackQuestions SET READED = 1 " +

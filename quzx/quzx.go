@@ -113,3 +113,11 @@ type HackerNewsService interface {
 	SetHackerNewsAsReadedFromTime(t int64)
 	SetAllHackerNewsAsReaded()
 }
+
+type StackService interface {
+	GetStackTags() ([]*StackTag, error)
+	GetStackQuestionsByClassification(classification string) ([]*StackQuestion, error)
+	SetStackQuestionAsReaded(question_id int)
+	SetStackQuestionsAsReadedByClassification(classification string)
+	SetStackQuestionsAsReadedByClassificationFromTime(classification string, t int64)
+}

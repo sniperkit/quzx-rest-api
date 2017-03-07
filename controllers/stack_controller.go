@@ -10,7 +10,7 @@ import (
 
 func GetStackTags(w http.ResponseWriter, r *http.Request) {
 
-	tags, err := postgres.GetStackTags()
+	tags, err := (&postgres.StackService{}).GetStackTags()
 
 	if err != nil {
 		log.Println(err)
@@ -32,7 +32,7 @@ func GetStackQuestionsByClassification(w http.ResponseWriter, r *http.Request) {
 		log.Println("Attept to get the stack questions with empty classification")
 		w.WriteHeader(500)
 	} else {
-		questions, err := postgres.GetStackQuestionsByClassification(classification)
+		questions, err := (&postgres.StackService{}).GetStackQuestionsByClassification(classification)
 
 		if err != nil {
 			log.Println(err)
@@ -60,7 +60,7 @@ func SetStackQuestionAsReaded (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.SetStackQuestionAsReaded(bodyData.QuestionId)
+		(&postgres.StackService{}).SetStackQuestionAsReaded(bodyData.QuestionId)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -83,7 +83,7 @@ func SetStackQuestionsAsReaded (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.SetStackQuestionsAsReadedByClassification(bodyData.Tag)
+		(&postgres.StackService{}).SetStackQuestionsAsReadedByClassification(bodyData.Tag)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -100,7 +100,7 @@ func SetStackQuestionsAsReadedFromTime (w http.ResponseWriter, r *http.Request) 
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.SetStackQuestionsAsReadedByClassificationFromTime(bodyData.Tag, bodyData.FromTime)
+		(&postgres.StackService{}).SetStackQuestionsAsReadedByClassificationFromTime(bodyData.Tag, bodyData.FromTime)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
