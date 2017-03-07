@@ -106,3 +106,10 @@ type FeedService interface {
 	SetRssFeedAsReaded(feedId int)
 	UnsubscribeRssFeed(feedId int)
 }
+
+type HackerNewsService interface {
+	GetUnreadedHackerNews() ([]*HackerNews, error)
+	SetHackerNewsAsReaded(id int64)
+	SetHackerNewsAsReadedFromTime(t int64)
+	SetAllHackerNewsAsReaded()
+}

@@ -9,7 +9,7 @@ import (
 
 func GetUnreadedHackerNews(w http.ResponseWriter, r *http.Request) {
 
-	news, err := postgres.GetUnreadedHackerNews()
+	news, err := (&postgres.HackerNewsService{}).GetUnreadedHackerNews()
 
 	if err != nil {
 		log.Println(err)
@@ -35,7 +35,7 @@ func SetHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.SetHackerNewsAsReaded(bodyData.Id)
+		(&postgres.HackerNewsService{}).SetHackerNewsAsReaded(bodyData.Id)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -56,7 +56,7 @@ func SetHackerNewsAsReadedFromTime (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.SetHackerNewsAsReadedFromTime(bodyData.FromTime)
+		(&postgres.HackerNewsService{}).SetHackerNewsAsReadedFromTime(bodyData.FromTime)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -65,7 +65,7 @@ func SetHackerNewsAsReadedFromTime (w http.ResponseWriter, r *http.Request) {
 
 func SetAllHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
 
-	postgres.SetAllHackerNewsAsReaded()
+	(&postgres.HackerNewsService{}).SetAllHackerNewsAsReaded()
 	w.Header().Add("Content-Type", "application/json")
 	resp, _ := json.Marshal("{'result': 'ok'")
 	w.Write(resp)
