@@ -3,36 +3,19 @@ package model
 import (
 	"log"
 	"fmt"
+	"github.com/demas/cowl-services/quzx"
 )
 
-type Tag struct {
-	Id int `json:"id"`
-	Title string `json:"title"`
-	Total int `json:"total"`
-	Unreaded int `json:"unreaded"`
-}
+func GetTags() ([]*quzx.Tag, error) {
 
-type TaggedItem struct {
-	Id int `json:"id"`
-	TagId int `json:"tagid"`
-	Title string `json:"title"`
-	Summary string `json:"summary"`
-	Content string `json:"content"`
-	Link string `json:"link"`
-	Date int64 `json:"date"`
-	Source int `json:"source"`  // 1 stack
-}
-
-func GetTags() ([]*Tag, error) {
-
-	result := []*Tag{}
+	result := []*quzx.Tag{}
 	rows, err := db.Query("SELECT Id, Title, Total, Unreaded FROM Tags")
 
 	if err != nil {
 		log.Println(err)
 	} else {
 		for rows.Next() {
-			t := Tag{}
+			t := quzx.Tag{}
 			rows.Scan(&t.Id, &t.Title, &t.Total, &t.Unreaded)
 			result = append(result, &t)
 		}
@@ -41,9 +24,9 @@ func GetTags() ([]*Tag, error) {
 	return result, err
 }
 
-func GetTaggedItemsByTagId(tagId int) ([]*TaggedItem, error) {
+func GetTaggedItemsByTagId(tagId int) ([]*quzx.TaggedItem, error) {
 
-	result := []*TaggedItem{}
+	result := []*quzx.TaggedItem{}
 	rows, err := db.Query("SELECT Id, TagId, Title, Summary, Content, Link, Date, Source " +
 		"FROM TaggedItems WHERE TagId = $1", tagId)
 
@@ -51,7 +34,7 @@ func GetTaggedItemsByTagId(tagId int) ([]*TaggedItem, error) {
 		log.Println(err)
 	} else {
 		for rows.Next() {
-			i := TaggedItem{}
+			i := quzx.TaggedItem{}
 			rows.Scan(&i.Id, &i.TagId, &i.Title, &i.Summary, &i.Content, &i.Link, &i.Date, &i.Source)
 			result = append(result, &i)
 		}
@@ -63,7 +46,7 @@ func GetTaggedItemsByTagId(tagId int) ([]*TaggedItem, error) {
 
 func InsertTaggedItemFromStockItem(questionId int, tagId int) {
 
-	var item StackQuestion
+	var item quzx.StackQuestion
 	err := db.Get(&item, fmt.Sprintf("SELECT Title, Link, QuestionId, Tags, CreationDate " +
 		"FROM StackQuestions WHERE Id = '%d'", questionId))
 	if err != nil {
@@ -82,7 +65,7 @@ func InsertTaggedItemFromStockItem(questionId int, tagId int) {
 
 func InsertTaggedItemFromRss(rssItemId int, tagId int) {
 
-	var item RssItem
+	var item quzx.RssItem
 	err := db.Get(&item,
 		fmt.Sprintf("SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RssItem WHERE Id = %d", rssItemId))
 	if err != nil {

@@ -5,15 +5,14 @@ import (
 	"time"
 	"log"
 	"net/http"
-	"github.com/demas/cowl-services/model"
+	"github.com/demas/cowl-services/quzx"
 	"encoding/json"
-
 	"os"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
 
-	var user model.UserCredentials
+	var user quzx.UserCredentials
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
@@ -43,7 +42,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	response := model.Token{tokenString}
+	response := quzx.Token{tokenString}
 	json, _ := json.Marshal(response)
 
 	w.Write(json)

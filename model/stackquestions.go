@@ -1,31 +1,19 @@
 package model
 
 import "log"
+import "github.com/demas/cowl-services/quzx"
 
-type StackQuestion struct {
-	Id int `json:"id"`
-	Title string `json:"title"`
-	Link string `json:"link"`
-	QuestionId int `json:"questionid"`
-	Tags string `json:"tags"`
-	CreationDate int64 `json:"creationdate"`
-}
 
-type StackTag struct {
-	Classification string
-	Unreaded int
-}
+func GetStackTags() ([]*quzx.StackTag, error) {
 
-func GetStackTags() ([]*StackTag, error) {
-
-	result := []*StackTag{}
+	result := []*quzx.StackTag{}
 	rows, err := db.Query("SELECT Classification, Unreaded FROM StackTags WHERE Unreaded > 0")
 
 	if err != nil {
 		log.Println(err)
 	} else {
 		for rows.Next() {
-			q := StackTag{}
+			q := quzx.StackTag{}
 			rows.Scan(&q.Classification, &q.Unreaded)
 			result = append(result, &q)
 		}
@@ -34,9 +22,9 @@ func GetStackTags() ([]*StackTag, error) {
 	return result, err
 }
 
-func GetStackQuestionsByClassification(classification string) ([]*StackQuestion, error) {
+func GetStackQuestionsByClassification(classification string) ([]*quzx.StackQuestion, error) {
 
-	result := []*StackQuestion{}
+	result := []*quzx.StackQuestion{}
 	rows, err := db.Query("SELECT Id, Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions " +
 		"WHERE Classification = $1 and Readed = 0 ORDER BY CreationDate DESC LIMIT 15", classification)
 
@@ -44,7 +32,7 @@ func GetStackQuestionsByClassification(classification string) ([]*StackQuestion,
 		log.Println(err)
 	} else {
 		for rows.Next() {
-			q := StackQuestion{}
+			q := quzx.StackQuestion{}
 			rows.Scan(&q.Id, &q.Title, &q.Link, &q.QuestionId, &q.Tags, &q.CreationDate)
 			result = append(result, &q)
 		}

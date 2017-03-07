@@ -1,22 +1,12 @@
 package model
 
 import "log"
-
-type HackerNews struct {
-	Id int64
-	By string
-	Score int
-	Time int64
-	Title string
-	Type string
-	Url string
-	Readed int
-}
+import "github.com/demas/cowl-services/quzx"
 
 
-func GetUnreadedHackerNews() ([]*HackerNews, error) {
+func GetUnreadedHackerNews() ([]*quzx.HackerNews, error) {
 
-	result := []*HackerNews{}
+	result := []*quzx.HackerNews{}
 	rows, err := db.Query("SELECT Id, By, Score, Time, Title, Type, Url, Readed " +
 		"FROM HackerNews WHERE Readed = 0 ORDER BY TIME DESC")
 
@@ -24,7 +14,7 @@ func GetUnreadedHackerNews() ([]*HackerNews, error) {
 		log.Println(err)
 	} else {
 		for rows.Next() {
-			n := HackerNews{}
+			n := quzx.HackerNews{}
 			rows.Scan(&n.Id, &n.By, &n.Score, &n.Time, &n.Title, &n.Type, &n.Url, &n.Readed)
 			result = append(result, &n)
 		}

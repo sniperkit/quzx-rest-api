@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"strconv"
+	"github.com/demas/cowl-services/quzx"
 )
 
 func GetUnreadRssFeeds(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +60,7 @@ func GetRssFeedById(w http.ResponseWriter, r *http.Request) {
 
 func PutRssFeed(w http.ResponseWriter, r *http.Request) {
 
-	bodyData := new(model.RssFeed)
+	bodyData := new(quzx.RssFeed)
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&bodyData)
 
@@ -76,7 +77,7 @@ func PutRssFeed(w http.ResponseWriter, r *http.Request) {
 
 func PostRssFeed(w http.ResponseWriter, r *http.Request) {
 
-	bodyData := new(model.RssFeed)
+	bodyData := new(quzx.RssFeed)
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&bodyData)
 

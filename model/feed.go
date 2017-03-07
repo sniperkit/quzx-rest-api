@@ -4,38 +4,15 @@ import (
 	"log"
 	"fmt"
 	"strconv"
+
+	"github.com/demas/cowl-services/quzx"
 )
 
-type RssFeed struct {
-	Id int
-	Title string
-	Description string
-	Link string
-	LastSyncTime int64
-	ImageUrl string
-	AlternativeName string
-	Total int
-	Unreaded int
-	SyncInterval int
-	RssType int
-	ShowContent int
-	ShowOrder int
-	Folder string
-}
 
-type RssItem struct {
-	Id int
-	FeedId int
-	Title string
-	Summary string
-	Content string
-	Link string
-	Date int64
-}
 
-func GetAllRssFeeds() ([]*RssFeed, error) {
+func GetAllRssFeeds() ([]*quzx.RssFeed, error) {
 
-	result := []*RssFeed{}
+	result := []*quzx.RssFeed{}
 	rows, err := db.Query("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
 		                     "AlternativeName, Total, Unreaded, " +
 		                     "RssType, ShowContent, ShowOrder, Folder " +
@@ -45,7 +22,7 @@ func GetAllRssFeeds() ([]*RssFeed, error) {
 		log.Println(err)
 	} else {
 		for rows.Next() {
-			f := RssFeed{}
+			f := quzx.RssFeed{}
 			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.LastSyncTime,
 				&f.ImageUrl, &f.AlternativeName, &f.Total,
 				&f.Unreaded, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder)
@@ -57,9 +34,9 @@ func GetAllRssFeeds() ([]*RssFeed, error) {
 }
 
 
-func GetUnreadRssFeeds(rssType int) ([]*RssFeed, error) {
+func GetUnreadRssFeeds(rssType int) ([]*quzx.RssFeed, error) {
 
-	result := []*RssFeed{}
+	result := []*quzx.RssFeed{}
 	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
 				              "AlternativeName, Total, Unreaded, SyncInterval, " +
 		                              "RssType, ShowContent, ShowOrder, Folder " +
@@ -71,7 +48,7 @@ func GetUnreadRssFeeds(rssType int) ([]*RssFeed, error) {
 		log.Println(err)
 	} else {
 		for rows.Next() {
-			f := RssFeed{}
+			f := quzx.RssFeed{}
 			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.LastSyncTime,
 				&f.ImageUrl, &f.AlternativeName, &f.Total,
 				&f.Unreaded, &f.SyncInterval, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder)
@@ -83,9 +60,9 @@ func GetUnreadRssFeeds(rssType int) ([]*RssFeed, error) {
 }
 
 
-func GetRssFeedById(id int) (RssFeed, error) {
+func GetRssFeedById(id int) (quzx.RssFeed, error) {
 
-	var result RssFeed
+	var result quzx.RssFeed
 	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
 		                     "AlternativeName, Total, Unreaded, SyncInterval, RssType, ShowContent, ShowOrder, Folder " +
 		                     "FROM RssFeed WHERE Id = %d", id)
@@ -98,7 +75,7 @@ func GetRssFeedById(id int) (RssFeed, error) {
 	return result, err
 }
 
-func UpdateRssFeed(feed *RssFeed) {
+func UpdateRssFeed(feed *quzx.RssFeed) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("UPDATE RssFeed SET Link = $1, LastSyncTime = $2, AlternativeName = $3, " +
@@ -111,7 +88,7 @@ func UpdateRssFeed(feed *RssFeed) {
 	tx.Commit()
 }
 
-func InsertRssFeed(feed *RssFeed) {
+func InsertRssFeed(feed *quzx.RssFeed) {
 
 	tx := db.MustBegin()
 	_, err := tx.Exec("INSERT INTO RssFeed(Link, SyncInterval, LastSyncTime, AlternativeName, RssType, ShowContent, ShowOrder, Folder) " +
@@ -124,7 +101,7 @@ func InsertRssFeed(feed *RssFeed) {
 }
 
 
-func GetRssItemsByFeedId(feed_id int) ([]*RssItem, error) {
+func GetRssItemsByFeedId(feed_id int) ([]*quzx.RssItem, error) {
 
 	var showOrder int
 	err := db.Get(&showOrder, fmt.Sprintf("SELECT ShowOrder FROM RssFeed WHERE Id = '%d'", feed_id))
@@ -140,14 +117,14 @@ func GetRssItemsByFeedId(feed_id int) ([]*RssItem, error) {
 	}
 
 	query := "SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RssItem WHERE FeedId = " + strconv.Itoa(feed_id) + " and Readed = 0" + strOrder
-	result := []*RssItem{}
+	result := []*quzx.RssItem{}
 	rows, err := db.Query(query)
 
 	if err != nil {
 		log.Println(err)
 	} else {
 		for rows.Next() {
-			i := RssItem{}
+			i := quzx.RssItem{}
 			rows.Scan(&i.Id, &i.FeedId, &i.Title, &i.Summary, &i.Content, &i.Link, &i.Date)
 			result = append(result, &i)
 		}
