@@ -129,3 +129,9 @@ type TagsService interface {
 	InsertTaggedItemFromRss(rssItemId int, tagId int)
 	DeleteTaggedItem(id int)
 }
+
+type TorrentService interface {
+	GetUnreadedTorrentFeeds() ([]*TorrentFeed, error)
+	GetUnreadedNewsByFeed(feed_id int) ([]*TorrentNews, error)
+	SetTorrentNewsAsReaded(news_id int)
+}

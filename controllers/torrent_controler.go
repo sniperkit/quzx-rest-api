@@ -11,7 +11,7 @@ import (
 
 func GetUnreadedTorrentFeeds(w http.ResponseWriter, r *http.Request) {
 
-	feeds, err := postgres.GetUnreadedTorrentFeeds()
+	feeds, err := (&postgres.TorrentService{}).GetUnreadedTorrentFeeds()
 
 	if err != nil {
 		log.Println(err)
@@ -32,7 +32,7 @@ func GetUnreadedNewsByFeed(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error")
 		w.WriteHeader(500)
 	} else {
-		news, err := postgres.GetUnreadedNewsByFeed(feed_id)
+		news, err := (&postgres.TorrentService{}).GetUnreadedNewsByFeed(feed_id)
 
 		if err != nil {
 			log.Println(err)
@@ -60,7 +60,7 @@ func SetTorrentNewsAsReaded (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		postgres.SetTorrentNewsAsReaded(bodyData.Id)
+		(&postgres.TorrentService{}).SetTorrentNewsAsReaded(bodyData.Id)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
