@@ -2,14 +2,14 @@ package controllers
 
 import (
 	"log"
-	"github.com/demas/cowl-services/model"
+	"github.com/demas/cowl-services/postgres"
 	"net/http"
 	"encoding/json"
 )
 
 func GetUnreadedHackerNews(w http.ResponseWriter, r *http.Request) {
 
-	news, err := model.GetUnreadedHackerNews()
+	news, err := postgres.GetUnreadedHackerNews()
 
 	if err != nil {
 		log.Println(err)
@@ -35,7 +35,7 @@ func SetHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		model.SetHackerNewsAsReaded(bodyData.Id)
+		postgres.SetHackerNewsAsReaded(bodyData.Id)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -56,7 +56,7 @@ func SetHackerNewsAsReadedFromTime (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		model.SetHackerNewsAsReadedFromTime(bodyData.FromTime)
+		postgres.SetHackerNewsAsReadedFromTime(bodyData.FromTime)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -65,7 +65,7 @@ func SetHackerNewsAsReadedFromTime (w http.ResponseWriter, r *http.Request) {
 
 func SetAllHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
 
-	model.SetAllHackerNewsAsReaded()
+	postgres.SetAllHackerNewsAsReaded()
 	w.Header().Add("Content-Type", "application/json")
 	resp, _ := json.Marshal("{'result': 'ok'")
 	w.Write(resp)

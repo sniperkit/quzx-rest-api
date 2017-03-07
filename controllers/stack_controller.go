@@ -4,13 +4,13 @@ import (
 	"net/http"
 	"github.com/gorilla/mux"
 	"log"
-	"github.com/demas/cowl-services/model"
+	"github.com/demas/cowl-services/postgres"
 	"encoding/json"
 )
 
 func GetStackTags(w http.ResponseWriter, r *http.Request) {
 
-	tags, err := model.GetStackTags()
+	tags, err := postgres.GetStackTags()
 
 	if err != nil {
 		log.Println(err)
@@ -32,7 +32,7 @@ func GetStackQuestionsByClassification(w http.ResponseWriter, r *http.Request) {
 		log.Println("Attept to get the stack questions with empty classification")
 		w.WriteHeader(500)
 	} else {
-		questions, err := model.GetStackQuestionsByClassification(classification)
+		questions, err := postgres.GetStackQuestionsByClassification(classification)
 
 		if err != nil {
 			log.Println(err)
@@ -60,7 +60,7 @@ func SetStackQuestionAsReaded (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		model.SetStackQuestionAsReaded(bodyData.QuestionId)
+		postgres.SetStackQuestionAsReaded(bodyData.QuestionId)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -83,7 +83,7 @@ func SetStackQuestionsAsReaded (w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		model.SetStackQuestionsAsReadedByClassification(bodyData.Tag)
+		postgres.SetStackQuestionsAsReadedByClassification(bodyData.Tag)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)
@@ -100,7 +100,7 @@ func SetStackQuestionsAsReadedFromTime (w http.ResponseWriter, r *http.Request) 
 		log.Println(err)
 		w.WriteHeader(500)
 	} else {
-		model.SetStackQuestionsAsReadedByClassificationFromTime(bodyData.Tag, bodyData.FromTime)
+		postgres.SetStackQuestionsAsReadedByClassificationFromTime(bodyData.Tag, bodyData.FromTime)
 		w.Header().Add("Content-Type", "application/json")
 		resp, _ := json.Marshal(bodyData)
 		w.Write(resp)

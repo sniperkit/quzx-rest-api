@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"net/http"
-	"github.com/demas/cowl-services/model"
+	"github.com/demas/cowl-services/postgres"
 	"log"
 	"encoding/json"
 	"github.com/gorilla/mux"
@@ -11,7 +11,7 @@ import (
 
 func GetTags(w http.ResponseWriter, r *http.Request) {
 
-	tags, err := model.GetTags()
+	tags, err := postgres.GetTags()
 
 	if err != nil {
 		log.Println(err)
@@ -28,7 +28,7 @@ func GetTaggedItemsByTagId(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tagId, err :=  strconv.Atoi(vars["tagId"])
 
-	items, err := model.GetTaggedItemsByTagId(tagId)
+	items, err := postgres.GetTaggedItemsByTagId(tagId)
 
 	if err != nil {
 		log.Println(err)
@@ -57,9 +57,9 @@ func InsertTaggedItem (w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 	} else {
 		if bodyData.Source == 1 {
-			model.InsertTaggedItemFromStockItem(bodyData.ItemId, bodyData.TagId)
+			postgres.InsertTaggedItemFromStockItem(bodyData.ItemId, bodyData.TagId)
 		} else if bodyData.Source == 2 {
-			model.InsertTaggedItemFromRss(bodyData.ItemId, bodyData.TagId)
+			postgres.InsertTaggedItemFromRss(bodyData.ItemId, bodyData.TagId)
 		}
 
 		w.Header().Add("Content-Type", "application/json")
@@ -73,7 +73,7 @@ func DeleteTaggedItem(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ :=  strconv.Atoi(vars["id"])
 
-	model.DeleteTaggedItem(id)
+	postgres.DeleteTaggedItem(id)
 
 	w.Header().Add("Content-Type", "application/json")
 	resp, _ := json.Marshal("'result':'ok'")

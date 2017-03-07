@@ -1,4 +1,4 @@
-package model
+package postgres
 
 import "log"
 import "github.com/demas/cowl-services/quzx"
