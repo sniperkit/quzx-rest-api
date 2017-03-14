@@ -106,20 +106,30 @@ func (s *FeedService) InsertRssFeed(feed *quzx.RssFeed) {
 
 func (s *FeedService) GetRssItemsByFeedId(feed_id int) ([]*quzx.RssItem, error) {
 
-	var showOrder int
-	err := db.Get(&showOrder, fmt.Sprintf("SELECT ShowOrder FROM RssFeed WHERE Id = '%d'", feed_id))
+	var feed quzx.RssFeed
+	err := db.QueryRowx("SELECT ShowOrder, ShowContent, LimitFull, LimitHeadersOnly FROM RssFeed WHERE Id = $1", feed_id).StructScan(&feed)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	var strOrder string
-	if showOrder == 0 {
+	if feed.ShowOrder == 0 {
 		strOrder = " ORDER BY Date DESC"
 	} else {
 		strOrder = " ORDER BY Date ASC"
 	}
 
-	query := "SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RssItem WHERE FeedId = " + strconv.Itoa(feed_id) + " and Readed = 0" + strOrder
+	var limit int
+	if feed.ShowContent == 1 {
+		limit = feed.LimitFull
+	} else {
+		limit = feed.LimitHeadersOnly
+	}
+	log.Println(feed)
+
+	query := "SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RssItem WHERE FeedId = " + strconv.Itoa(feed_id) +
+		" and Readed = 0" + strOrder + " LIMIT " + strconv.Itoa(limit)
+
 	result := []*quzx.RssItem{}
 	rows, err := db.Query(query)
 
