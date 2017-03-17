@@ -28,6 +28,7 @@ type RssFeed struct {
 	Folder string
 	LimitFull int
 	LimitHeadersOnly int
+	Broken int
 }
 
 type RssItem struct {

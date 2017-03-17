@@ -18,7 +18,7 @@ func (s *FeedService) GetAllRssFeeds() ([]*quzx.RssFeed, error) {
 	result := []*quzx.RssFeed{}
 	rows, err := db.Query("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
 		                     "AlternativeName, Total, Unreaded, " +
-		                     "RssType, ShowContent, ShowOrder, Folder " +
+		                     "RssType, ShowContent, ShowOrder, Folder, Broken " +
 		                     "FROM RssFeed")
 
 	if err != nil {
@@ -28,7 +28,7 @@ func (s *FeedService) GetAllRssFeeds() ([]*quzx.RssFeed, error) {
 			f := quzx.RssFeed{}
 			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.LastSyncTime,
 				&f.ImageUrl, &f.AlternativeName, &f.Total,
-				&f.Unreaded, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder)
+				&f.Unreaded, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder, &f.Broken)
 			result = append(result, &f)
 		}
 	}
