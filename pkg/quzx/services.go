@@ -42,3 +42,6 @@ type TwitterService interface {
 	DestroyFavorites(id int64)
 }
 
+type BookmarkRepository interface {
+	InsertBookmark(bookmark Bookmark, tags []string)
+}

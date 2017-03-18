@@ -81,3 +81,23 @@ type TaggedItem struct {
 	Date int64 `json:"date"`
 	Source int `json:"source"`  // 1 stack
 }
+
+type BookmarkTag struct {
+	Id int `json:"id"`
+	Name string `json:"name"`
+	BookmarkCount int `json:"cnt"`
+}
+
+type Bookmark struct {
+	Id int `json:"id"`
+	Url string `json:"url"`
+	Title string `json:"title"`
+	Description string `json:"description"`
+	ReadItLater int `json:"readItLater"`
+}
+
+type BookmarkTagConnection struct {
+	Id int `json:"id"`
+	BookmarkId int `json:"bookmarkId"`
+	TagId int `json:"tagId"`
+}
