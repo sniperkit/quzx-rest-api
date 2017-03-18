@@ -93,16 +93,29 @@ func (s *FeedService) UpdateRssFeed(feed *quzx.RssFeed) {
 
 func (s *FeedService) InsertRssFeed(feed *quzx.RssFeed) {
 
+	insertQuery := `INSERT INTO RssFeed
+			(Link, SyncInterval, LastSyncTime, AlternativeName, RssType, ShowContent, ShowOrder,
+			 Folder, LimitFull, LimitHeadersOnly, Broken)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
+
 	tx := db.MustBegin()
-	_, err := tx.Exec("INSERT INTO RssFeed(Link, SyncInterval, LastSyncTime, AlternativeName, RssType, ShowContent, ShowOrder, Folder) " +
-		"VALUES ($1, $2, $3, $4, $5, $6, $7, $8)", feed.Link, feed.SyncInterval, 0, feed.AlternativeName, feed.RssType,
-		feed.ShowContent, feed.ShowOrder, feed.Folder)
+	_, err := tx.Exec(insertQuery,
+				feed.Link,
+				feed.SyncInterval, 0,
+				feed.AlternativeName,
+				feed.RssType,
+				feed.ShowContent,
+				feed.ShowOrder,
+				feed.Folder,
+				feed.LimitFull,
+				feed.LimitHeadersOnly,
+				feed.Broken)
+
 	if err != nil {
 		log.Println(err)
 	}
 	tx.Commit()
 }
-
 
 func (s *FeedService) GetRssItemsByFeedId(feed_id int) ([]*quzx.RssItem, error) {
 
