@@ -28,7 +28,7 @@ func (s *StackService) GetStackTags() ([]*quzx.StackTag, error) {
 func (s *StackService) GetStackQuestionsByClassification(classification string) ([]*quzx.StackQuestion, error) {
 
 	result := []*quzx.StackQuestion{}
-	rows, err := db.Query("SELECT Id, Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions " +
+	rows, err := db.Query("SELECT Id, Title, Link, QuestionId, Tags, CreationDate, Classification FROM StackQuestions " +
 		"WHERE Classification = $1 and Readed = 0 ORDER BY CreationDate DESC LIMIT 15", classification)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (s *StackService) GetStackQuestionsByClassification(classification string) 
 	} else {
 		for rows.Next() {
 			q := quzx.StackQuestion{}
-			rows.Scan(&q.Id, &q.Title, &q.Link, &q.QuestionId, &q.Tags, &q.CreationDate)
+			rows.Scan(&q.Id, &q.Title, &q.Link, &q.QuestionId, &q.Tags, &q.CreationDate, &q.Classification)
 			result = append(result, &q)
 		}
 	}
