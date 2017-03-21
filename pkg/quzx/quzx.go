@@ -10,23 +10,27 @@ type Token struct {
 }
 
 type RssFeed struct {
-	Id int
-	Title string
-	Description string
-	Link string
-	LastSyncTime int64
-	ImageUrl string
-	AlternativeName string
-	Total int
-	Unreaded int
-	SyncInterval int
-	RssType int
-	ShowContent int
-	ShowOrder int
-	Folder string
-	LimitFull int
-	LimitHeadersOnly int
-	Broken int
+	Id int `db:"id"`
+	Title string `db:"title"`
+	Description string `db:"description"`
+	Link string `db:"link"`
+	UpdateUrl string `db:"updateurl"`
+	ImageTitle string `db:"imagetitle"`
+	ImageUrl string `db:"imageurl"`
+	ImageHeight int `db:"imageheight"`
+	ImageWidth int `db:"imagewidth"`
+	LastSyncTime int64 `db:"lastsynctime"`
+	Total int `db:"total"`
+	Unreaded int `db:"unreaded"`
+	SyncInterval int `db:"syncinterval"`
+	AlternativeName string `db:"alternativename"`
+	RssType int `db:"rsstype"`
+	ShowContent int `db:"showcontent"`
+	ShowOrder int `db:"showorder"`
+	Folder string `db:"folder"`
+	LimitFull int `db:"limitfull"`
+	LimitHeadersOnly int `db:"limitheadersonly"`
+	Broken int `db:"broken"`
 }
 
 type RssItem struct {

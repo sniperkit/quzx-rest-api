@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"log"
-	"fmt"
 	"strconv"
 
 	"github.com/demas/cowl-services/pkg/quzx"
@@ -10,81 +9,51 @@ import (
 
 // represent a PostgreSQL implementation of quzx.FeedService
 type FeedService struct {
-
 }
 
 func (s *FeedService) GetAllRssFeeds() ([]*quzx.RssFeed, error) {
 
 	result := []*quzx.RssFeed{}
-	rows, err := db.Query("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
-		                     "AlternativeName, Total, Unreaded, " +
-		                     "RssType, ShowContent, ShowOrder, Folder, Broken " +
-		                     "FROM RssFeed")
-
-	if err != nil {
-		log.Println(err)
-	} else {
-		for rows.Next() {
-			f := quzx.RssFeed{}
-			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.LastSyncTime,
-				&f.ImageUrl, &f.AlternativeName, &f.Total,
-				&f.Unreaded, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder, &f.Broken)
-			result = append(result, &f)
-		}
-	}
-
+	err := db.Select(&result, "SELECT * FROM RssFeed")
 	return result, err
 }
-
 
 func (s *FeedService) GetUnreadRssFeeds(rssType int) ([]*quzx.RssFeed, error) {
 
+	selectQuery := `SELECT * FROM RssFeed WHERE RssType = $1 AND Unreaded > 0`
 	result := []*quzx.RssFeed{}
-	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
-				              "AlternativeName, Total, Unreaded, SyncInterval, " +
-		                              "RssType, ShowContent, ShowOrder, Folder " +
-		                              "FROM RssFeed WHERE RssType = %d AND Unreaded > 0", rssType)
-
-	rows, err := db.Query(query)
-
-	if err != nil {
-		log.Println(err)
-	} else {
-		for rows.Next() {
-			f := quzx.RssFeed{}
-			rows.Scan(&f.Id, &f.Title, &f.Description, &f.Link, &f.LastSyncTime,
-				&f.ImageUrl, &f.AlternativeName, &f.Total,
-				&f.Unreaded, &f.SyncInterval, &f.RssType, &f.ShowContent, &f.ShowOrder, &f.Folder)
-			result = append(result, &f)
-		}
-	}
-
+	err := db.Select(&result, selectQuery, rssType)
 	return result, err
 }
 
-
 func (s *FeedService) GetRssFeedById(id int) (quzx.RssFeed, error) {
 
+	selectQuery := `SELECT * FROM RssFeed WHERE Id = $1`
 	var result quzx.RssFeed
-	query := fmt.Sprintf("SELECT Id, Title, Description, Link, LastSyncTime, ImageUrl, " +
-		                     "AlternativeName, Total, Unreaded, SyncInterval, RssType, ShowContent, ShowOrder, Folder " +
-		                     "FROM RssFeed WHERE Id = %d", id)
-	err := db.Get(&result, query)
-
-	if err != nil {
-		log.Println(err)
-	}
-
+	err := db.Get(&result, selectQuery, id)
 	return result, err
 }
 
 func (s *FeedService) UpdateRssFeed(feed *quzx.RssFeed) {
 
 	tx := db.MustBegin()
-	_, err := tx.Exec("UPDATE RssFeed SET Link = $1, LastSyncTime = $2, AlternativeName = $3, " +
-				 "RssType = $4, ShowContent = $5, ShowOrder = $6, Folder = $7, SyncInterval = $8 WHERE Id = $9",
-				 feed.Link, feed.LastSyncTime, feed.AlternativeName, feed.RssType, feed.ShowContent,
-				 feed.ShowOrder, feed.Folder, feed.SyncInterval, feed.Id)
+
+	updateQuery := `UPDATE RssFeed
+	                SET Link = $1, LastSyncTime = $2, AlternativeName = $3, RssType = $4,
+	                    ShowContent = $5, ShowOrder = $6, Folder = $7, SyncInterval = $8
+	                WHERE Id = $9"`
+
+	_, err := tx.Exec(updateQuery,
+		feed.Link,
+		feed.LastSyncTime,
+		feed.AlternativeName,
+		feed.RssType,
+		feed.ShowContent,
+		feed.ShowOrder,
+		feed.Folder,
+		feed.SyncInterval,
+		feed.Id)
+
 	if err != nil {
 		log.Println(err)
 	}
@@ -93,15 +62,16 @@ func (s *FeedService) UpdateRssFeed(feed *quzx.RssFeed) {
 
 func (s *FeedService) InsertRssFeed(feed *quzx.RssFeed) {
 
-	insertQuery := `INSERT INTO RssFeed
-			(Link, SyncInterval, LastSyncTime, AlternativeName, RssType, ShowContent, ShowOrder,
-			 Folder, LimitFull, LimitHeadersOnly, Broken)
+	insertQuery := `INSERT INTO RssFeed(
+				Link, SyncInterval, LastSyncTime, AlternativeName, RssType, ShowContent, ShowOrder,
+			 	Folder, LimitFull, LimitHeadersOnly, Broken)
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
 
 	tx := db.MustBegin()
 	_, err := tx.Exec(insertQuery,
 				feed.Link,
-				feed.SyncInterval, 0,
+				feed.SyncInterval,
+				0,
 				feed.AlternativeName,
 				feed.RssType,
 				feed.ShowContent,
@@ -114,6 +84,7 @@ func (s *FeedService) InsertRssFeed(feed *quzx.RssFeed) {
 	if err != nil {
 		log.Println(err)
 	}
+
 	tx.Commit()
 }
 
