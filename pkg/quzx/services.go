@@ -23,6 +23,7 @@ type HackerNewsService interface {
 
 type StackService interface {
 	GetStackTags() ([]*StackTag, error)
+	GetStackQuestionById(id int) (*StackQuestion, error)
 	GetStackQuestionsByClassification(classification string) ([]*StackQuestion, error)
 	SetStackQuestionAsReaded(question_id int)
 	SetStackQuestionsAsReadedByClassification(classification string)

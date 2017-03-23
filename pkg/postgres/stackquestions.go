@@ -1,7 +1,9 @@
 package postgres
 
 import "log"
-import "github.com/demas/cowl-services/pkg/quzx"
+import (
+	"github.com/demas/cowl-services/pkg/quzx"
+)
 
 // represent a PostgreSQL implementation of quzx.StackService
 type StackService struct {
@@ -23,6 +25,15 @@ func (s *StackService) GetStackTags() ([]*quzx.StackTag, error) {
 	}
 
 	return result, err
+}
+
+func (s *StackService) GetStackQuestionById(id int) (*quzx.StackQuestion, error) {
+
+	var item quzx.StackQuestion
+
+	selectQuery := `SELECT Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions WHERE Id = $1`
+	err := db.Get(&item, selectQuery, id)
+	return &item, err
 }
 
 func (s *StackService) GetStackQuestionsByClassification(classification string) ([]*quzx.StackQuestion, error) {

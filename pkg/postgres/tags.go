@@ -27,17 +27,24 @@ func (s *TagsService) GetTaggedItemsByTagId(tagId int) ([]*quzx.TaggedItem, erro
 
 func (s *TagsService) InsertTaggedItemFromStockItem(questionId int, tagId int) {
 
-	var item quzx.StackQuestion
-	err := db.Get(&item, fmt.Sprintf("SELECT Title, Link, QuestionId, Tags, CreationDate " +
-		"FROM StackQuestions WHERE Id = '%d'", questionId))
+	item, err := (&StackService{}).GetStackQuestionById(questionId)
 	if err != nil {
 		log.Println(questionId)
 		log.Fatal(err)
 	}
 
+	insertQuestion := `INSERT INTO TaggedItems(TagId, Title, Summary, Content, Link, Date, Source)
+			   VALUES ($1, $2, $3, $4, $5, $6, $7)`
+
 	tx := db.MustBegin()
-	_, err = tx.Exec("INSERT INTO TaggedItems(TagId, Title, Summary, Content, Link, Date, Source) " +
-		"VALUES ($1, $2, $3, $4, $5, $6, $7)", tagId, item.Title, "", "", item.Link, item.CreationDate, 1)
+	_, err = tx.Exec(insertQuestion,
+		tagId,
+		item.Title,
+		"",
+		"",
+		item.Link,
+		item.CreationDate,
+		1)
 	if err != nil {
 		log.Println(err)
 	}
