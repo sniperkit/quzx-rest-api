@@ -13,37 +13,14 @@ type TagsService struct {
 func (s *TagsService) GetTags() ([]*quzx.Tag, error) {
 
 	result := []*quzx.Tag{}
-	rows, err := db.Query("SELECT Id, Title, Total, Unreaded FROM Tags")
-
-	if err != nil {
-		log.Println(err)
-	} else {
-		for rows.Next() {
-			t := quzx.Tag{}
-			rows.Scan(&t.Id, &t.Title, &t.Total, &t.Unreaded)
-			result = append(result, &t)
-		}
-	}
-
+	err := db.Select(&result, "SELECT * FROM Tags")
 	return result, err
 }
 
 func (s *TagsService) GetTaggedItemsByTagId(tagId int) ([]*quzx.TaggedItem, error) {
 
 	result := []*quzx.TaggedItem{}
-	rows, err := db.Query("SELECT Id, TagId, Title, Summary, Content, Link, Date, Source " +
-		"FROM TaggedItems WHERE TagId = $1", tagId)
-
-	if err != nil {
-		log.Println(err)
-	} else {
-		for rows.Next() {
-			i := quzx.TaggedItem{}
-			rows.Scan(&i.Id, &i.TagId, &i.Title, &i.Summary, &i.Content, &i.Link, &i.Date, &i.Source)
-			result = append(result, &i)
-		}
-	}
-
+	err := db.Select(&result, "SELECT * FROM TaggedItems WHERE TagId = $1", tagId)
 	return result, err
 }
 
