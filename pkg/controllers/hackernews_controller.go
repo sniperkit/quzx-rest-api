@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"github.com/demas/cowl-services/pkg/postgres"
 	"net/http"
 	"encoding/json"

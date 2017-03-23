@@ -29,8 +29,8 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/rss/feeds/{id}", controllers.PostWrapHandler(controllers.Unsubscribe)).Methods("DELETE")
 
 	// twitter
-	router.HandleFunc("/twitter/favorites/{name}", controllers.GetTwitterFavourites)
-	router.HandleFunc("/twitter/unfavorite", controllers.SetTwitUnfavorite).Methods("POST")
+	router.HandleFunc("/twitter/favorites/{name}", controllers.WrapHandler(controllers.GetTwitterFavourites))
+	router.HandleFunc("/twitter/unfavorite", controllers.PostWrapHandler(controllers.SetTwitUnfavorite)).Methods("POST")
 
 	// hacker news
 	router.HandleFunc("/hn/unread", controllers.WrapHandler(controllers.GetUnreadedHackerNews))

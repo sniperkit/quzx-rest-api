@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 	"github.com/demas/cowl-services/pkg/postgres"
-	"log"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"strconv"
