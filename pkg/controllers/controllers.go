@@ -46,6 +46,12 @@ type PostData struct {
 	Id int64 `json:"id"`
 }
 
+type UniversalPostStruct struct {
+	Id int `json:"id"`
+	FromTime int64 `json:"fromTime"`
+	Tag string `json:"tag"`
+}
+
 type ResultOk struct {
 	Result string `json:"result"`
 }
