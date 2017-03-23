@@ -10,19 +10,7 @@ type HackerNewsService struct {
 func (s *HackerNewsService) GetUnreadedHackerNews() ([]*quzx.HackerNews, error) {
 
 	result := []*quzx.HackerNews{}
-	rows, err := db.Query("SELECT Id, By, Score, Time, Title, Type, Url, Readed " +
-		"FROM HackerNews WHERE Readed = 0 ORDER BY TIME DESC")
-
-	if err != nil {
-		log.Println(err)
-	} else {
-		for rows.Next() {
-			n := quzx.HackerNews{}
-			rows.Scan(&n.Id, &n.By, &n.Score, &n.Time, &n.Title, &n.Type, &n.Url, &n.Readed)
-			result = append(result, &n)
-		}
-	}
-
+	err := db.Select(&result, "SELECT * FROM HackerNews WHERE Readed = 0 ORDER BY TIME DESC")
 	return result, err
 }
 

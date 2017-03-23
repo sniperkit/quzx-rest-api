@@ -108,6 +108,14 @@ func (s *FeedService) GetRssItemsByFeedId(feed_id int) ([]*quzx.RssItem, error) 
 	return result, err
 }
 
+func (s *FeedService) GetRssItemById(id int) (*quzx.RssItem, error) {
+
+	var item quzx.RssItem
+	selectQuery := `SELECT * FROM RssItem WHERE Id = $1 LIMIT 1`
+	err := db.Get(&item, selectQuery, id)
+	return &item, err
+}
+
 func (s *FeedService) SetRssItemAsReaded(id int) {
 
 	tx := db.MustBegin()

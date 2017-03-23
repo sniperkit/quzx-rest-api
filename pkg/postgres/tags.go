@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"log"
-	"fmt"
 	"github.com/demas/cowl-services/pkg/quzx"
 )
 
@@ -53,16 +52,23 @@ func (s *TagsService) InsertTaggedItemFromStockItem(questionId int, tagId int) {
 
 func (s *TagsService) InsertTaggedItemFromRss(rssItemId int, tagId int) {
 
-	var item quzx.RssItem
-	err := db.Get(&item,
-		fmt.Sprintf("SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RssItem WHERE Id = %d", rssItemId))
+	item, err := (&FeedService{}).GetRssItemById(rssItemId)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	insertQuery := `INSERT INTO TaggedItems(TagId, Title, Summary, Content, Link, Date, Source)
+			VALUES ($1, $2, $3, $4, $5, $6, $7)`
+
 	tx := db.MustBegin()
-	_, err = tx.Exec("INSERT INTO TaggedItems(TagId, Title, Summary, Content, Link, Date, Source) " +
-		"VALUES ($1, $2, $3, $4, $5, $6, $7)", tagId, item.Title, item.Summary, item.Content, item.Link, item.Date, 2)
+	_, err = tx.Exec(insertQuery,
+		tagId,
+		item.Title,
+		item.Summary,
+		item.Content,
+		item.Link,
+		item.Date,
+		2)
 	if err != nil {
 		log.Println(err)
 	}
