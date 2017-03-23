@@ -9,73 +9,42 @@ import (
 	"strconv"
 )
 
-func GetTags(w http.ResponseWriter, r *http.Request) {
+func GetTags(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	tags, err := (&postgres.TagsService{}).GetTags()
+	return (&postgres.TagsService{}).GetTags()
+}
 
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(tags)
-		w.Write(resp)
+func GetTaggedItemsByTagId(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+
+	tagId, _ :=  strconv.Atoi(mux.Vars(r)["tagId"])
+	return (&postgres.TagsService{}).GetTaggedItemsByTagId(tagId)
+}
+
+func InsertTaggedItem (w http.ResponseWriter, r *http.Request) (interface{}, error) {
+
+	type SetTaggedItemStruct struct {
+		ItemId int `json:"itemId"`
+		TagId int `json:"tagId"`
+		Source int `json:"source"`
 	}
-}
-
-func GetTaggedItemsByTagId(w http.ResponseWriter, r *http.Request) {
-
-	vars := mux.Vars(r)
-	tagId, err :=  strconv.Atoi(vars["tagId"])
-	items, err := (&postgres.TagsService{}).GetTaggedItemsByTagId(tagId)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(items)
-		w.Write(resp)
-	}
-}
-
-type SetTaggedItemStruct struct {
-	ItemId int `json:"itemId"`
-	TagId int `json:"tagId"`
-	Source int `json:"source"`
-}
-
-func InsertTaggedItem (w http.ResponseWriter, r *http.Request) {
 
 	bodyData := new(SetTaggedItemStruct)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&bodyData)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
+	err := json.NewDecoder(r.Body).Decode(&bodyData)
+	if err == nil {
 		if bodyData.Source == 1 {
 			(&postgres.TagsService{}).InsertTaggedItemFromStockItem(bodyData.ItemId, bodyData.TagId)
 		} else if bodyData.Source == 2 {
 			(&postgres.TagsService{}).InsertTaggedItemFromRss(bodyData.ItemId, bodyData.TagId)
 		}
-
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(bodyData)
-		w.Write(resp)
 	}
+
+	return bodyData, err
 }
 
-func DeleteTaggedItem(w http.ResponseWriter, r *http.Request) {
+func DeleteTaggedItem(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	vars := mux.Vars(r)
-	id, _ :=  strconv.Atoi(vars["id"])
-
+	id, _ :=  strconv.Atoi(mux.Vars(r)["id"])
 	(&postgres.TagsService{}).DeleteTaggedItem(id)
-
-	w.Header().Add("Content-Type", "application/json")
-	resp, _ := json.Marshal("'result':'ok'")
-	w.Write(resp)
+	return ResultOk{"ok"}, nil
 }
 
