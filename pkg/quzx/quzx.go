@@ -33,6 +33,25 @@ type RssFeed struct {
 	Broken int `db:"broken"`
 }
 
+// Returns ORDER BY clause to get RssItems
+func (rssFeed *RssFeed) OrderByClause() (string) {
+
+	if rssFeed.ShowOrder == 0 {
+		return " ORDER BY Date DESC"
+	}
+
+	 return " ORDER BY Date ASC"
+}
+
+func (rssFeed *RssFeed) Limit() (int) {
+
+	if rssFeed.ShowContent == 1 {
+		return rssFeed.LimitFull
+	}
+
+	return rssFeed.LimitHeadersOnly
+}
+
 type RssItem struct {
 	Id int
 	FeedId int
@@ -41,6 +60,8 @@ type RssItem struct {
 	Content string
 	Link string
 	Date int64
+	ItemId string
+	Readed int
 }
 
 type HackerNews struct {

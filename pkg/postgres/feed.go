@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"log"
-	"strconv"
 
 	"github.com/demas/cowl-services/pkg/quzx"
 )
@@ -91,40 +90,19 @@ func (s *FeedService) InsertRssFeed(feed *quzx.RssFeed) {
 func (s *FeedService) GetRssItemsByFeedId(feed_id int) ([]*quzx.RssItem, error) {
 
 	var feed quzx.RssFeed
-	err := db.QueryRowx("SELECT ShowOrder, ShowContent, LimitFull, LimitHeadersOnly FROM RssFeed WHERE Id = $1", feed_id).StructScan(&feed)
+	feed, err := s.GetRssFeedById(feed_id)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 
-	var strOrder string
-	if feed.ShowOrder == 0 {
-		strOrder = " ORDER BY Date DESC"
-	} else {
-		strOrder = " ORDER BY Date ASC"
-	}
-
-	var limit int
-	if feed.ShowContent == 1 {
-		limit = feed.LimitFull
-	} else {
-		limit = feed.LimitHeadersOnly
-	}
-	log.Println(feed)
-
-	query := "SELECT Id, FeedId, Title, Summary, Content, Link, Date FROM RssItem WHERE FeedId = " + strconv.Itoa(feed_id) +
-		" and Readed = 0" + strOrder + " LIMIT " + strconv.Itoa(limit)
-
+	strOrder := feed.OrderByClause()
+	limit := feed.Limit()
+	selectItemsQuery := `SELECT * FROM RssItem WHERE FeedId = $1 AND Readed = 0 ` + strOrder + ` LIMIT $2`
 	result := []*quzx.RssItem{}
-	rows, err := db.Query(query)
 
+	err = db.Select(&result, selectItemsQuery, feed_id, limit)
 	if err != nil {
 		log.Println(err)
-	} else {
-		for rows.Next() {
-			i := quzx.RssItem{}
-			rows.Scan(&i.Id, &i.FeedId, &i.Title, &i.Summary, &i.Content, &i.Link, &i.Date)
-			result = append(result, &i)
-		}
 	}
 
 	return result, err
