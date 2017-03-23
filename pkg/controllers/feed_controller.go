@@ -61,58 +61,47 @@ func PostRssFeed(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	return bodyData, err
 }
 
-type SetRssItemAsReadedStruct struct {
-	Id int `json:"id"`
-}
+func SetRssItemAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-func SetRssItemAsReaded (w http.ResponseWriter, r *http.Request) {
+	type SetRssItemAsReadedStruct struct {
+		Id int `json:"id"`
+	}
 
 	bodyData := new(SetRssItemAsReadedStruct)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&bodyData)
+	err := json.NewDecoder(r.Body).Decode(&bodyData)
 
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
+	if err == nil {
 		(&postgres.FeedService{}).SetRssItemAsReaded(bodyData.Id)
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(bodyData)
-		w.Write(resp)
 	}
+
+	return bodyData, err
 }
 
-type SetRssFeedAsReadedStruct struct {
-	FeedId int `json:"feed_id"`
-}
+func SetRssFeedAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-func SetRssFeedAsReaded (w http.ResponseWriter, r *http.Request) {
+	type SetRssFeedAsReadedStruct struct {
+		FeedId int `json:"feed_id"`
+	}
 
 	bodyData := new(SetRssFeedAsReadedStruct)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&bodyData)
+	err := json.NewDecoder(r.Body).Decode(&bodyData)
 
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
+	if err == nil {
 		(&postgres.FeedService{}).SetRssFeedAsReaded(bodyData.FeedId)
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(bodyData)
-		w.Write(resp)
 	}
+
+	return bodyData, err
 }
 
-func Unsubscribe (w http.ResponseWriter, r *http.Request) {
+func Unsubscribe (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	vars := mux.Vars(r)
-	feedid, _ :=  strconv.Atoi(vars["id"])
+	type ReqResult struct {
+		Result string `json:"result"`
+	}
 
+	feedid, err :=  strconv.Atoi(mux.Vars(r)["id"])
 	(&postgres.FeedService{}).UnsubscribeRssFeed(feedid)
-
-	w.Header().Add("Content-Type", "application/json")
-	resp, _ := json.Marshal("'result':'ok'")
-	w.Write(resp)
+	return ReqResult{"ok"}, err
 }
 
 

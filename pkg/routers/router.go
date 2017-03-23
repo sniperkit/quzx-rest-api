@@ -20,13 +20,13 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/rss/unread/{rss_type}", controllers.WrapHandler(controllers.GetUnreadRssFeeds))
 	router.HandleFunc("/rss/allfeeds", controllers.WrapHandler(controllers.GetAllRssFeeds))
 	router.HandleFunc("/rss/{feed_id}/items", controllers.WrapHandler(controllers.GetRssItemsByFeedId))
-	router.HandleFunc("/rss/item/as-read", controllers.SetRssItemAsReaded).Methods("POST")
-	router.HandleFunc("/rss/feed/as-read", controllers.SetRssFeedAsReaded).Methods("POST")
+	router.HandleFunc("/rss/item/as-read", controllers.PostWrapHandler(controllers.SetRssItemAsReaded)).Methods("POST")
+	router.HandleFunc("/rss/feed/as-read", controllers.PostWrapHandler(controllers.SetRssFeedAsReaded)).Methods("POST")
 
 	router.HandleFunc("/rss/feeds/{id}", controllers.WrapHandler(controllers.GetRssFeedById)).Methods("GET")
 	router.HandleFunc("/rss/feeds", controllers.PostWrapHandler(controllers.PutRssFeed)).Methods("PUT")
 	router.HandleFunc("/rss/feeds", controllers.PostWrapHandler(controllers.PostRssFeed)).Methods("POST")
-	router.HandleFunc("/rss/feeds/{id}", controllers.Unsubscribe).Methods("DELETE")
+	router.HandleFunc("/rss/feeds/{id}", controllers.PostWrapHandler(controllers.Unsubscribe)).Methods("DELETE")
 
 	// twitter
 	router.HandleFunc("/twitter/favorites/{name}", controllers.GetTwitterFavourites)
