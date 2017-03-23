@@ -7,66 +7,39 @@ import (
 	"encoding/json"
 )
 
-func GetUnreadedHackerNews(w http.ResponseWriter, r *http.Request) {
+func GetUnreadedHackerNews(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	news, err := (&postgres.HackerNewsService{}).GetUnreadedHackerNews()
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(news)
-		w.Write(resp)
-	}
+	return (&postgres.HackerNewsService{}).GetUnreadedHackerNews()
 }
 
-type SetHackerNewsAsReadedStruct struct {
-	Id int64 `json:"id"`
-}
+func SetHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-func SetHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
-
-	bodyData := new(SetHackerNewsAsReadedStruct)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&bodyData)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
+	bodyData := new(PostData)
+	err := json.NewDecoder(r.Body).Decode(&bodyData)
+	if err == nil {
 		(&postgres.HackerNewsService{}).SetHackerNewsAsReaded(bodyData.Id)
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(bodyData)
-		w.Write(resp)
 	}
+
+	return bodyData, err
 }
 
-type SetHackerNewsAsReadedFromTimeStruct struct {
-	FromTime int64 `json:"fromTime"`
-}
+func SetHackerNewsAsReadedFromTime (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-func SetHackerNewsAsReadedFromTime (w http.ResponseWriter, r *http.Request) {
+	type SetHackerNewsAsReadedFromTimeStruct struct {
+		FromTime int64 `json:"fromTime"`
+	}
 
 	bodyData := new(SetHackerNewsAsReadedFromTimeStruct)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&bodyData)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
+	err := json.NewDecoder(r.Body).Decode(&bodyData)
+	if err == nil {
 		(&postgres.HackerNewsService{}).SetHackerNewsAsReadedFromTime(bodyData.FromTime)
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(bodyData)
-		w.Write(resp)
 	}
+
+	return bodyData, err
 }
 
-func SetAllHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) {
+func SetAllHackerNewsAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	(&postgres.HackerNewsService{}).SetAllHackerNewsAsReaded()
-	w.Header().Add("Content-Type", "application/json")
-	resp, _ := json.Marshal("{'result': 'ok'")
-	w.Write(resp)
+	return ResultOk{"ok"}, nil
 }

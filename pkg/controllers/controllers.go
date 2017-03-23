@@ -42,3 +42,11 @@ func PostWrapHandler(handler HandlerFunc) http.HandlerFunc {
 	}
 }
 
+type PostData struct {
+	Id int64 `json:"id"`
+}
+
+type ResultOk struct {
+	Result string `json:"result"`
+}
+

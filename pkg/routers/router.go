@@ -33,10 +33,10 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/twitter/unfavorite", controllers.SetTwitUnfavorite).Methods("POST")
 
 	// hacker news
-	router.HandleFunc("/hn/unread", controllers.GetUnreadedHackerNews)
-	router.HandleFunc("/hn/as-read", controllers.SetHackerNewsAsReaded).Methods("POST")
-	router.HandleFunc("/hn/all-as-read", controllers.SetAllHackerNewsAsReaded).Methods("POST")
-	router.HandleFunc("/hn/fromtime-as-read", controllers.SetHackerNewsAsReadedFromTime).Methods("POST")
+	router.HandleFunc("/hn/unread", controllers.WrapHandler(controllers.GetUnreadedHackerNews))
+	router.HandleFunc("/hn/as-read", controllers.PostWrapHandler(controllers.SetHackerNewsAsReaded)).Methods("POST")
+	router.HandleFunc("/hn/all-as-read", controllers.PostWrapHandler(controllers.SetAllHackerNewsAsReaded)).Methods("POST")
+	router.HandleFunc("/hn/fromtime-as-read",controllers.PostWrapHandler(controllers.SetHackerNewsAsReadedFromTime)).Methods("POST")
 
 	// tags
 	router.HandleFunc("/tags", controllers.GetTags)

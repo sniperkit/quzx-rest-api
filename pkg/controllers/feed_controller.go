@@ -62,15 +62,11 @@ func PostRssFeed(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 func SetRssItemAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	type SetRssItemAsReadedStruct struct {
-		Id int `json:"id"`
-	}
-
-	bodyData := new(SetRssItemAsReadedStruct)
+	bodyData := new(PostData)
 	err := json.NewDecoder(r.Body).Decode(&bodyData)
 
 	if err == nil {
-		(&postgres.FeedService{}).SetRssItemAsReaded(bodyData.Id)
+		(&postgres.FeedService{}).SetRssItemAsReaded(int(bodyData.Id))
 	}
 
 	return bodyData, err
@@ -94,13 +90,9 @@ func SetRssFeedAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, e
 
 func Unsubscribe (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	type ReqResult struct {
-		Result string `json:"result"`
-	}
-
 	feedid, err :=  strconv.Atoi(mux.Vars(r)["id"])
 	(&postgres.FeedService{}).UnsubscribeRssFeed(feedid)
-	return ReqResult{"ok"}, err
+	return ResultOk{"ok"}, err
 }
 
 
