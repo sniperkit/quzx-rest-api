@@ -8,111 +8,57 @@ import (
 	"github.com/gorilla/mux"
 	"strconv"
 	"github.com/demas/cowl-services/pkg/quzx"
+
 )
 
-func GetUnreadRssFeeds(w http.ResponseWriter, r *http.Request) {
+func GetUnreadRssFeeds(w http.ResponseWriter, r *http.Request) (interface{}, error)  {
 
-	vars := mux.Vars(r)
-	rss_type, err :=  strconv.Atoi(vars["rss_type"])
-
-	feeds, err := (&postgres.FeedService{}).GetUnreadRssFeeds(rss_type)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(feeds)
-		w.Write(resp)
-	}
+	rss_type, _ :=  strconv.Atoi(mux.Vars(r)["rss_type"])
+	return (&postgres.FeedService{}).GetUnreadRssFeeds(rss_type)
 }
 
-func GetAllRssFeeds(w http.ResponseWriter, r *http.Request) {
+func GetAllRssFeeds(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	feeds, err := (&postgres.FeedService{}).GetAllRssFeeds()
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(feeds)
-		w.Write(resp)
-	}
+	return (&postgres.FeedService{}).GetAllRssFeeds()
 }
 
-func GetRssFeedById(w http.ResponseWriter, r *http.Request) {
+func GetRssFeedById(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	vars := mux.Vars(r)
-	id, err :=  strconv.Atoi(vars["id"])
-
-	feed, err := (&postgres.FeedService{}).GetRssFeedById(id)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(feed)
-		w.Write(resp)
-	}
+	id, _ :=  strconv.Atoi(mux.Vars(r)["id"])
+	return (&postgres.FeedService{}).GetRssFeedById(id)
 }
 
-func PutRssFeed(w http.ResponseWriter, r *http.Request) {
+func GetRssItemsByFeedId(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+
+	var news []*quzx.RssItem
+	feed_id, err :=  strconv.Atoi(mux.Vars(r)["feed_id"])
+	if err == nil {
+		news, err = (&postgres.FeedService{}).GetRssItemsByFeedId(feed_id)
+	}
+	return news, err
+}
+
+func PutRssFeed(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	bodyData := new(quzx.RssFeed)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&bodyData)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
+	err := json.NewDecoder(r.Body).Decode(&bodyData)
+	if err == nil {
 		(&postgres.FeedService{}).UpdateRssFeed(bodyData)
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(bodyData)
-		w.Write(resp)
 	}
+
+	return bodyData, err
 }
 
-func PostRssFeed(w http.ResponseWriter, r *http.Request) {
+func PostRssFeed(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	bodyData := new(quzx.RssFeed)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&bodyData)
+	err := json.NewDecoder(r.Body).Decode(&bodyData)
 
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
+	if err == nil {
 		(&postgres.FeedService{}).InsertRssFeed(bodyData)
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(bodyData)
-		w.Write(resp)
 	}
-}
 
-func GetRssItemsByFeedId(w http.ResponseWriter, r *http.Request) {
-
-	vars := mux.Vars(r)
-	feed_id, err :=  strconv.Atoi(vars["feed_id"])
-
-	if err != nil  {
-		log.Println("Error")
-		w.WriteHeader(500)
-	} else {
-		news, err := (&postgres.FeedService{}).GetRssItemsByFeedId(feed_id)
-
-		if err != nil {
-			log.Println(err)
-			w.WriteHeader(500)
-		} else {
-			w.Header().Add("Content-Type", "application/json")
-			resp, _ := json.Marshal(news)
-			w.Write(resp)
-		}
-
-	}
+	return bodyData, err
 }
 
 type SetRssItemAsReadedStruct struct {

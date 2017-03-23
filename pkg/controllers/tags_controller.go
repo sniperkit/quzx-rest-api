@@ -27,7 +27,6 @@ func GetTaggedItemsByTagId(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	tagId, err :=  strconv.Atoi(vars["tagId"])
-
 	items, err := (&postgres.TagsService{}).GetTaggedItemsByTagId(tagId)
 
 	if err != nil {
