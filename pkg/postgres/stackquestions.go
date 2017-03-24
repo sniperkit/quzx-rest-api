@@ -52,7 +52,15 @@ func (s *StackService) GetStackQuestionsByClassification(classification string) 
 	} else {
 		for rows.Next() {
 			q := quzx.StackQuestion{}
-			rows.Scan(&q.Id, &q.Title, &q.Link, &q.QuestionId, &q.Tags, &q.CreationDate, &q.Classification)
+			rows.Scan(&q.Id,
+				&q.Title,
+				&q.Link,
+				&q.QuestionId,
+				&q.Tags,
+				&q.CreationDate,
+				&q.Classification,
+				&q.Favorite,
+				&q.Classified)
 			result = append(result, &q)
 		}
 	}
