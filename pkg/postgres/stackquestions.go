@@ -30,7 +30,8 @@ func (s *StackService) GetStackTags() ([]*quzx.StackTag, error) {
 func (s *StackService) GetStackQuestionById(id int) (*quzx.StackQuestion, error) {
 
 	var item quzx.StackQuestion
-	selectQuery := `SELECT Title, Link, QuestionId, Tags, CreationDate FROM StackQuestions WHERE Id = $1`
+	selectQuery := `SELECT Title, Link, QuestionId, Tags, CreationDate, Favorite, Classified
+			FROM StackQuestions WHERE Id = $1`
 	err := db.Get(&item, selectQuery, id)
 	return &item, err
 }
@@ -38,7 +39,7 @@ func (s *StackService) GetStackQuestionById(id int) (*quzx.StackQuestion, error)
 func (s *StackService) GetStackQuestionsByClassification(classification string) ([]*quzx.StackQuestion, error) {
 
 	result := []*quzx.StackQuestion{}
-	selectQuery := `SELECT Id, Title, Link, QuestionId, Tags, CreationDate, Classification
+	selectQuery := `SELECT Id, Title, Link, QuestionId, Tags, CreationDate, Classification, Favorite, Classified
 			FROM StackQuestions
 			WHERE Classification = $1 and Readed = 0
 			ORDER BY CreationDate DESC

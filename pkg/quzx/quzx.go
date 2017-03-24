@@ -62,6 +62,7 @@ type RssItem struct {
 	Date int64
 	ItemId string
 	Readed int
+	Favorite int
 }
 
 type HackerNews struct {
@@ -73,6 +74,7 @@ type HackerNews struct {
 	Type string
 	Url string
 	Readed int
+	Favorite int
 }
 
 type StackTag struct {
@@ -88,6 +90,8 @@ type StackQuestion struct {
 	Tags string `json:"tags"`
 	CreationDate int64 `json:"creationdate"`
 	Classification string `json:"classification"`
+	Favorite int `json:"favorite"`
+	Classified int `json:"classified"`
 }
 
 type Tag struct {
