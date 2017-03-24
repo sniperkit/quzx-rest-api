@@ -3,27 +3,26 @@ package controllers
 import (
 	"net/http"
 	"encoding/json"
-	"log"
+	"github.com/demas/cowl-services/pkg/quzx"
+	"github.com/demas/cowl-services/pkg/postgres"
 )
 
-func PostBookmark(w http.ResponseWriter, r *http.Request) {
+/*	{
+		"id": 5,
+		"url": "1",
+		"title":"title",
+		"description":"description",
+		"readitlater": 1,
+		"tags": ["one", "two"]
+	} */
 
-	type PostBookmark struct {
-		bookmark map[string]string `json:"bookmark"`
+func PostBookmark(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+
+	bodyData := new(quzx.BookmarkPOST)
+	err := json.NewDecoder(r.Body).Decode(&bodyData)
+	if err == nil {
+		(&postgres.BookmarkRepository{}).InsertBookmark(bodyData)
 	}
 
-	bodyData := new(PostBookmark)
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&bodyData)
-
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(500)
-	} else {
-		//(&postgres.BookmarkRepository{}).InsertBookmark(bodyData.bookmark, bodyData.tags)
-		log.Println(bodyData.bookmark["title"])
-		w.Header().Add("Content-Type", "application/json")
-		resp, _ := json.Marshal(bodyData)
-		w.Write(resp)
-	}
+	return bodyData, err
 }

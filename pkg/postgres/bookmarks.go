@@ -9,57 +9,50 @@ import (
 type BookmarkRepository struct {
 }
 
-func (r *BookmarkRepository) InsertBookmark(bookmark quzx.Bookmark, tags []string) {
-
-	insertBookmarkQuery := `INSERT INTO Bookmark(Url, Title, Description, ReadItLater)
-				VALUES($1, $2, $3, $4)
-				RETURNING Id`
+func (r *BookmarkRepository) insertBookmarkTags(tags []string, bookmarkId int) {
 
 	insertTagQuery := `INSERT INTO BookmarkTag(Name, BookmarkCount)
-			   VALUES($1, $2) ON CONFLICT DO NOTHING RETURNING Id`
+			   VALUES($1, 0) ON CONFLICT(Name) DO UPDATE SET Name = EXCLUDED.Name RETURNING Id`
 
 	insertTagConnectionQuery := `INSERT INTO BookmarkTagConnnection(BookmarkId, TagId)
 				     VALUES($1, $2)`
 
 	tx := db.MustBegin()
 
-	log.Println(bookmark.Title)
-
-	// insert bookmark
-	result, err := tx.Exec(insertBookmarkQuery,
-			  	bookmark.Url,
-		          	bookmark.Title,
-			  	bookmark.Description,
-				bookmark.ReadItLater)
-	if err != nil {
-		log.Println(err)
-
-	}
-
-	// and get bookmark_id
-	bookmarkId, err := result.LastInsertId()
-	if err != nil {
-		log.Println("Getting last inserted id for bookmark : " + err.Error())
-	}
-
-	// check create tags
 	for _, tag := range tags {
 
-		result, err = tx.Exec(insertTagQuery, tag, 0)
+		var tagId int
+		tagRows := db.QueryRow(insertTagQuery, tag)
+		tagRows.Scan(&tagId)
+
+		_, err := tx.Exec(insertTagConnectionQuery, bookmarkId, tagId)
 		if err != nil {
 			log.Println(err)
-
 		}
-
-		tagId, err := result.LastInsertId()
-		if err != nil {
-			log.Println(err)
-
-		}
-
-		result, err = tx.Exec(insertTagConnectionQuery, bookmarkId, tagId)
 	}
 
+	tx.Commit()
+}
+
+func (r *BookmarkRepository) InsertBookmark(bookmark *quzx.BookmarkPOST) {
+
+	insertBookmarkQuery := `INSERT INTO Bookmark(Url, Title, Description, ReadItLater)
+				VALUES(:url, :title, :description, :readitlater)
+				RETURNING Id`
+
+	tx := db.MustBegin()
+
+	var bookmarkId int
+	rows, err := db.NamedQuery(insertBookmarkQuery, bookmark)
+	if err != nil {
+		log.Println(err)
+	}
+
+	if rows.Next() {
+		rows.Scan(&bookmarkId)
+	}
+
+	r.insertBookmarkTags(bookmark.Tags, bookmarkId)
 
 	tx.Commit()
 }

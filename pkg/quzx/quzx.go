@@ -122,6 +122,11 @@ type Bookmark struct {
 	ReadItLater int `json:"readItLater"`
 }
 
+type BookmarkPOST struct {
+	*Bookmark
+	Tags []string `json:"tags"`
+}
+
 type BookmarkTagConnection struct {
 	Id int `json:"id"`
 	BookmarkId int `json:"bookmarkId"`

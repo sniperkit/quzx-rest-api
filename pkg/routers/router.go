@@ -45,7 +45,7 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/tags/items/{id}", controllers.PostWrapHandler(controllers.DeleteTaggedItem)).Methods("DELETE")
 
 	// bookmarks
-	router.HandleFunc("/bookmarks", controllers.PostBookmark).Methods("POST")
+	router.HandleFunc("/bookmarks", controllers.PostWrapHandler(controllers.PostBookmark)).Methods("POST")
 
 	return router
 }
