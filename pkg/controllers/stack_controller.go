@@ -17,6 +17,13 @@ func GetStackQuestionsByClassification(w http.ResponseWriter, r *http.Request) (
 	return (&postgres.StackService{}).GetStackQuestionsByClassification(mux.Vars(r)["classification"])
 }
 
+func GetStackQuestionsByClassificationAndDetails(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+
+	return (&postgres.StackService{}).GetStackQuestionsByClassificationAndDetails(mux.Vars(r)["classification"],
+										      mux.Vars(r)["details"])
+}
+
+
 func SetStackQuestionAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	type SetStackQuestionAsReadedStruct struct {

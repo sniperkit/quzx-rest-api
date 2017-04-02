@@ -70,6 +70,39 @@ func (s *StackService) GetStackQuestionsByClassification(classification string) 
 	return result, err
 }
 
+func (s *StackService) GetStackQuestionsByClassificationAndDetails(classification string, details string) ([]*quzx.StackQuestion, error) {
+
+	result := []*quzx.StackQuestion{}
+	selectQuery := `SELECT Id, Title, Link, QuestionId, Tags, CreationDate, Classification, Details,
+			       Favorite, Classified
+			FROM StackQuestions
+			WHERE Classification = $1 AND Details = $2 Readed = 0
+			ORDER BY CreationDate DESC
+			LIMIT 15`
+
+	rows, err := db.Query(selectQuery, classification, details)
+
+	if err != nil {
+		log.Println(err)
+	} else {
+		for rows.Next() {
+			q := quzx.StackQuestion{}
+			rows.Scan(&q.Id,
+				&q.Title,
+				&q.Link,
+				&q.QuestionId,
+				&q.Tags,
+				&q.CreationDate,
+				&q.Classification,
+				&q.Details,
+				&q.Favorite,
+				&q.Classified)
+			result = append(result, &q)
+		}
+	}
+
+	return result, err
+}
 
 func (s *StackService) SetStackQuestionAsReaded(question_id int) {
 
