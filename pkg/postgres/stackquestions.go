@@ -36,6 +36,23 @@ func (s *StackService) GetStackQuestionById(id int) (*quzx.StackQuestion, error)
 	return &item, err
 }
 
+func (s *StackService) GetSecondTagByClassification(classification string)  (interface{}, error) {
+
+	type Result struct {
+		Details string `json:"details"`
+		Count int `json:"count"`
+	}
+
+	result := []*Result{}
+	selectQuery := `SELECT Details, COUNT(Id)
+	                FROM StackQuestions
+	                WHERE Classification = $1 and READED = 0
+	                GROUP BY Details`
+
+	err := db.Select(&result, selectQuery, classification)
+	return result, err
+}
+
 func (s *StackService) GetStackQuestionsByClassification(classification string) ([]*quzx.StackQuestion, error) {
 
 	result := []*quzx.StackQuestion{}

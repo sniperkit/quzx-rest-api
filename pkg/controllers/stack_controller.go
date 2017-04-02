@@ -12,6 +12,11 @@ func GetStackTags(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	return (&postgres.StackService{}).GetStackTags()
 }
 
+func GetSecondTagsByClassification(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+
+	return (&postgres.StackService{}).GetSecondTagByClassification(mux.Vars(r)["classification"])
+}
+
 func GetStackQuestionsByClassification(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	return (&postgres.StackService{}).GetStackQuestionsByClassification(mux.Vars(r)["classification"])
@@ -22,7 +27,6 @@ func GetStackQuestionsByClassificationAndDetails(w http.ResponseWriter, r *http.
 	return (&postgres.StackService{}).GetStackQuestionsByClassificationAndDetails(mux.Vars(r)["classification"],
 										      mux.Vars(r)["details"])
 }
-
 
 func SetStackQuestionAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 

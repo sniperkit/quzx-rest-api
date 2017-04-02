@@ -11,6 +11,7 @@ func InitRoutes() *mux.Router {
 
 	// stack
 	router.HandleFunc("/stack/tags", controllers.WrapHandler(controllers.GetStackTags))
+	router.HandleFunc("/stack/secondtags/{classification}", controllers.WrapHandler(controllers.GetSecondTagsByClassification))
 	router.HandleFunc("/stack/questions/{classification}", controllers.WrapHandler(controllers.GetStackQuestionsByClassification))
 	router.HandleFunc("/stack/questions/{classification}/{details}", controllers.WrapHandler(controllers.GetStackQuestionsByClassificationAndDetails))
 	router.HandleFunc("/stack/question-as-read", controllers.PostWrapHandler(controllers.SetStackQuestionAsReaded)).Methods("POST")
