@@ -39,7 +39,8 @@ func (s *StackService) GetStackQuestionById(id int) (*quzx.StackQuestion, error)
 func (s *StackService) GetStackQuestionsByClassification(classification string) ([]*quzx.StackQuestion, error) {
 
 	result := []*quzx.StackQuestion{}
-	selectQuery := `SELECT Id, Title, Link, QuestionId, Tags, CreationDate, Classification, Favorite, Classified
+	selectQuery := `SELECT Id, Title, Link, QuestionId, Tags, CreationDate, Classification, Details,
+			       Favorite, Classified
 			FROM StackQuestions
 			WHERE Classification = $1 and Readed = 0
 			ORDER BY CreationDate DESC
@@ -59,6 +60,7 @@ func (s *StackService) GetStackQuestionsByClassification(classification string) 
 				&q.Tags,
 				&q.CreationDate,
 				&q.Classification,
+				&q.Details,
 				&q.Favorite,
 				&q.Classified)
 			result = append(result, &q)

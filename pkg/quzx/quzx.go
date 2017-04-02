@@ -90,6 +90,7 @@ type StackQuestion struct {
 	Tags string `json:"tags"`
 	CreationDate int64 `json:"creationdate"`
 	Classification string `json:"classification"`
+	Details string `json:"details"`
 	Favorite int `json:"favorite"`
 	Classified int `json:"classified"`
 }
