@@ -76,7 +76,7 @@ func (s *StackService) GetStackQuestionsByClassificationAndDetails(classificatio
 	selectQuery := `SELECT Id, Title, Link, QuestionId, Tags, CreationDate, Classification, Details,
 			       Favorite, Classified
 			FROM StackQuestions
-			WHERE Classification = $1 AND Details = $2 Readed = 0
+			WHERE Classification = $1 AND Details = $2 AND Readed = 0
 			ORDER BY CreationDate DESC
 			LIMIT 15`
 
