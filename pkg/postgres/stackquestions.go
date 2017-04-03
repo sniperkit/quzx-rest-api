@@ -11,8 +11,12 @@ type StackService struct {
 
 func (s *StackService) GetStackTags() ([]*quzx.StackTag, error) {
 
+	selectQuery := `SELECT Classification, Unreaded
+	                FROM StackTags
+	                WHERE Unreaded > 0 and Hidden = 0`
+
 	result := []*quzx.StackTag{}
-	rows, err := db.Query("SELECT Classification, Unreaded FROM StackTags WHERE Unreaded > 0")
+	rows, err := db.Query(selectQuery)
 
 	if err != nil {
 		log.Println(err)

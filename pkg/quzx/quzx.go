@@ -80,6 +80,7 @@ type HackerNews struct {
 type StackTag struct {
 	Classification string
 	Unreaded int
+	Hidden int
 }
 
 type StackQuestion struct {
