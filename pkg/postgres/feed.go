@@ -40,7 +40,7 @@ func (s *FeedService) UpdateRssFeed(feed *quzx.RssFeed) {
 	updateQuery := `UPDATE RssFeed
 	                SET Link = $1, LastSyncTime = $2, AlternativeName = $3, RssType = $4,
 	                    ShowContent = $5, ShowOrder = $6, Folder = $7, SyncInterval = $8
-	                WHERE Id = $9"`
+	                WHERE Id = $9`
 
 	_, err := tx.Exec(updateQuery,
 		feed.Link,
