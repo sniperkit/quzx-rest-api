@@ -3,6 +3,7 @@ package postgres
 import (
 	"log"
 	"github.com/demas/cowl-services/pkg/quzx"
+	"github.com/demas/cowl-go/pkg/postgres"
 )
 
 // represent a PostgreSQL implementation of quzx.TagsService
@@ -52,7 +53,7 @@ func (s *TagsService) InsertTaggedItemFromStockItem(questionId int, tagId int) {
 
 func (s *TagsService) InsertTaggedItemFromRss(rssItemId int, tagId int) {
 
-	item, err := (&FeedService{}).GetRssItemById(rssItemId)
+	item, err := (&postgres.RssFeedRepository{}).GetRssItemById(rssItemId)
 	if err != nil {
 		log.Fatal(err)
 	}

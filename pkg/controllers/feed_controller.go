@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"net/http"
-	"github.com/demas/cowl-services/pkg/postgres"
+	"github.com/demas/cowl-go/pkg/postgres"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"strconv"
@@ -13,18 +13,18 @@ import (
 func GetUnreadRssFeeds(w http.ResponseWriter, r *http.Request) (interface{}, error)  {
 
 	rss_type, _ :=  strconv.Atoi(mux.Vars(r)["rss_type"])
-	return (&postgres.FeedService{}).GetUnreadRssFeeds(rss_type)
+	return (&postgres.RssFeedRepository{}).GetUnreadRssFeeds(rss_type)
 }
 
 func GetAllRssFeeds(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	return (&postgres.FeedService{}).GetAllRssFeeds()
+	return (&postgres.RssFeedRepository{}).GetFeeds(), nil
 }
 
 func GetRssFeedById(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	id, _ :=  strconv.Atoi(mux.Vars(r)["id"])
-	return (&postgres.FeedService{}).GetRssFeedById(id)
+	return (&postgres.RssFeedRepository{}).GetRssFeedById(id)
 }
 
 func GetRssItemsByFeedId(w http.ResponseWriter, r *http.Request) (interface{}, error) {
@@ -32,20 +32,21 @@ func GetRssItemsByFeedId(w http.ResponseWriter, r *http.Request) (interface{}, e
 	var news []*quzx.RssItem
 	feed_id, err :=  strconv.Atoi(mux.Vars(r)["feed_id"])
 	if err == nil {
-		news, err = (&postgres.FeedService{}).GetRssItemsByFeedId(feed_id)
+		news, err = (&postgres.RssFeedRepository{}).GetRssItemsByFeedId(feed_id)
 	}
 	return news, err
 }
 
 func PutRssFeed(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	bodyData := new(quzx.RssFeed)
-	err := json.NewDecoder(r.Body).Decode(&bodyData)
+	d := new(quzx.RssFeed)
+	err := json.NewDecoder(r.Body).Decode(&d)
 	if err == nil {
-		(&postgres.FeedService{}).UpdateRssFeed(bodyData)
+		(&postgres.RssFeedRepository{}).UpdateFeedAfterSync(d.Link, d.LastSyncTime, d.AlternativeName,
+			d.RssType, d.ShowContent, d.ShowOrder, d.Folder, d.SyncInterval, d.Id)
 	}
 
-	return bodyData, err
+	return d, err
 }
 
 func PostRssFeed(w http.ResponseWriter, r *http.Request) (interface{}, error) {
@@ -54,7 +55,7 @@ func PostRssFeed(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	err := json.NewDecoder(r.Body).Decode(&bodyData)
 
 	if err == nil {
-		(&postgres.FeedService{}).InsertRssFeed(bodyData)
+		(&postgres.RssFeedRepository{}).InsertRssFeed(bodyData)
 	}
 
 	return bodyData, err
@@ -66,7 +67,7 @@ func SetRssItemAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, e
 	err := json.NewDecoder(r.Body).Decode(&bodyData)
 
 	if err == nil {
-		(&postgres.FeedService{}).SetRssItemAsReaded(int(bodyData.Id))
+		(&postgres.RssFeedRepository{}).SetRssItemAsReaded(int(bodyData.Id))
 	}
 
 	return bodyData, err
@@ -82,7 +83,7 @@ func SetRssFeedAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, e
 	err := json.NewDecoder(r.Body).Decode(&bodyData)
 
 	if err == nil {
-		(&postgres.FeedService{}).SetRssFeedAsReaded(bodyData.FeedId)
+		(&postgres.RssFeedRepository{}).SetRssFeedAsReaded(bodyData.FeedId)
 	}
 
 	return bodyData, err
@@ -91,7 +92,7 @@ func SetRssFeedAsReaded (w http.ResponseWriter, r *http.Request) (interface{}, e
 func Unsubscribe (w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	feedid, err :=  strconv.Atoi(mux.Vars(r)["id"])
-	(&postgres.FeedService{}).UnsubscribeRssFeed(feedid)
+	(&postgres.RssFeedRepository{}).UnsubscribeRssFeed(feedid)
 	return ResultOk{"ok"}, err
 }
 
