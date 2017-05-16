@@ -4,12 +4,13 @@ import (
 	"net/http"
 	"github.com/gorilla/mux"
 	"github.com/demas/cowl-services/pkg/postgres"
+	pg "github.com/demas/cowl-go/pkg/postgres"
 	"encoding/json"
 )
 
 func GetStackTags(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
-	return (&postgres.StackService{}).GetStackTags()
+	return (&pg.StackOverflowRepository{}).GetStackTags()
 }
 
 func GetSecondTagsByClassification(w http.ResponseWriter, r *http.Request) (interface{}, error) {

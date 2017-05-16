@@ -1,6 +1,9 @@
 package quzx
 
-import "github.com/ChimeraCoder/anaconda"
+import (
+	"github.com/ChimeraCoder/anaconda"
+	"github.com/demas/cowl-go/pkg/quzx-crawler"
+)
 
 type FeedService interface {
 	GetAllRssFeeds() ([]*RssFeed, error)
@@ -22,7 +25,7 @@ type HackerNewsService interface {
 }
 
 type StackService interface {
-	GetStackTags() ([]*StackTag, error)
+	GetStackTags() ([]*quzx_crawler.StackTag, error)
 	GetStackQuestionById(id int) (*StackQuestion, error)
 	GetStackQuestionsByClassification(classification string) ([]*StackQuestion, error)
 	SetStackQuestionAsReaded(question_id int)

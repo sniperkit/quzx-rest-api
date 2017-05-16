@@ -9,42 +9,11 @@ import (
 type StackService struct {
 }
 
-func (s *StackService) GetStackTags() ([]*quzx.StackTag, error) {
-
-	selectQuery := `SELECT Classification, Unreaded
-	                FROM StackTags
-	                WHERE Unreaded > 0 and Hidden = 0`
-
-	result := []*quzx.StackTag{}
-	rows, err := db.Query(selectQuery)
-
-	if err != nil {
-		log.Println(err)
-	} else {
-		for rows.Next() {
-			q := quzx.StackTag{}
-			rows.Scan(&q.Classification, &q.Unreaded)
-			result = append(result, &q)
-		}
-	}
-
-	return result, err
-}
-
-func (s *StackService) GetStackQuestionById(id int) (*quzx.StackQuestion, error) {
-
-	var item quzx.StackQuestion
-	selectQuery := `SELECT Title, Link, QuestionId, Tags, CreationDate, Favorite, Classified
-			FROM StackQuestions WHERE Id = $1`
-	err := db.Get(&item, selectQuery, id)
-	return &item, err
-}
-
-func (s *StackService) GetSecondTagByClassification(classification string)  (interface{}, error) {
+func (s *StackService) GetSecondTagByClassification(classification string) (interface{}, error) {
 
 	type Result struct {
 		Details string `json:"details"`
-		Count int `json:"count"`
+		Count   int    `json:"count"`
 	}
 
 	result := []*Result{}
@@ -136,7 +105,6 @@ func (s *StackService) SetStackQuestionAsReaded(question_id int) {
 	}
 	tx.Commit()
 }
-
 
 func (s *StackService) SetStackQuestionsAsReadedByClassification(classification string) {
 

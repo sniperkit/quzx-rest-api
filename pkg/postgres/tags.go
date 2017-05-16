@@ -2,8 +2,9 @@ package postgres
 
 import (
 	"log"
-	"github.com/demas/cowl-services/pkg/quzx"
+
 	"github.com/demas/cowl-go/pkg/postgres"
+	"github.com/demas/cowl-services/pkg/quzx"
 )
 
 // represent a PostgreSQL implementation of quzx.TagsService
@@ -24,10 +25,9 @@ func (s *TagsService) GetTaggedItemsByTagId(tagId int) ([]*quzx.TaggedItem, erro
 	return result, err
 }
 
-
 func (s *TagsService) InsertTaggedItemFromStockItem(questionId int, tagId int) {
 
-	item, err := (&StackService{}).GetStackQuestionById(questionId)
+	item, err := (&postgres.StackOverflowRepository{}).GetStackQuestionById(questionId)
 	if err != nil {
 		log.Println(questionId)
 		log.Fatal(err)
@@ -75,7 +75,6 @@ func (s *TagsService) InsertTaggedItemFromRss(rssItemId int, tagId int) {
 	}
 	tx.Commit()
 }
-
 
 func (s *TagsService) DeleteTaggedItem(id int) {
 
