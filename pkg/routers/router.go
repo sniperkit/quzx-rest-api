@@ -1,15 +1,15 @@
 package routers
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/demas/cowl-services/pkg/controllers"
+	"github.com/gorilla/mux"
 )
 
 func InitRoutes() *mux.Router {
 
 	router := mux.NewRouter().PathPrefix("/api").Subrouter().StrictSlash(true)
 
-	// stack
+	// stack (test)
 	router.HandleFunc("/stack/tags", controllers.WrapHandler(controllers.GetStackTags))
 	router.HandleFunc("/stack/secondtags/{classification}", controllers.WrapHandler(controllers.GetSecondTagsByClassification))
 	router.HandleFunc("/stack/questions/{classification}", controllers.WrapHandler(controllers.GetStackQuestionsByClassification))
@@ -38,7 +38,7 @@ func InitRoutes() *mux.Router {
 	router.HandleFunc("/hn/unread", controllers.WrapHandler(controllers.GetUnreadedHackerNews))
 	router.HandleFunc("/hn/as-read", controllers.PostWrapHandler(controllers.SetHackerNewsAsReaded)).Methods("POST")
 	router.HandleFunc("/hn/all-as-read", controllers.PostWrapHandler(controllers.SetAllHackerNewsAsReaded)).Methods("POST")
-	router.HandleFunc("/hn/fromtime-as-read",controllers.PostWrapHandler(controllers.SetHackerNewsAsReadedFromTime)).Methods("POST")
+	router.HandleFunc("/hn/fromtime-as-read", controllers.PostWrapHandler(controllers.SetHackerNewsAsReadedFromTime)).Methods("POST")
 
 	// tags
 	router.HandleFunc("/tags", controllers.WrapHandler(controllers.GetTags))
