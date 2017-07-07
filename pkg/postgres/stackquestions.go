@@ -29,7 +29,9 @@ func (s *StackService) GetSecondTagByClassification(classification string) (inte
 func (s *StackService) GetStackQuestionsByClassification(classification string) ([]*quzx.StackQuestion, error) {
 
 	result := []*quzx.StackQuestion{}
-	selectQuery := `SELECT * FROM StackQuestions
+	selectQuery := `SELECT Id, Title, Link, QuestionId, Tags, CreationDate, Classification, Details,
+ 			      	       Favorite, Classified, Score, AnswerCount, ViewCount
+	                FROM StackQuestions
 			        WHERE Classification = $1 and Readed = 0
 			        ORDER BY CreationDate DESC
 			        LIMIT 15`
