@@ -88,6 +88,9 @@ type StackQuestion struct {
 	Details        string `json:"details"`
 	Favorite       int    `json:"favorite"`
 	Classified     int    `json:"classified"`
+	Score          int    `json:"score"`
+	AnswerCount    int    `json:"answercount"`
+	ViewCount      int    `json:"viewcount"`
 }
 
 type Tag struct {
