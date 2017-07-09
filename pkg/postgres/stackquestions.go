@@ -33,7 +33,7 @@ func (s *StackService) GetStackQuestionsByClassification(classification string) 
  			      	       Favorite, Classified, Score, AnswerCount, ViewCount
 	                FROM StackQuestions
 			        WHERE Classification = $1 and Readed = 0
-			        ORDER BY CreationDate DESC
+			        ORDER BY Score DESC
 			        LIMIT 15`
 
 	rows, err := db.Query(selectQuery, classification)
@@ -70,7 +70,7 @@ func (s *StackService) GetStackQuestionsByClassificationAndDetails(classificatio
 			       Favorite, Classified
 			FROM StackQuestions
 			WHERE Classification = $1 AND Details = $2 AND Readed = 0
-			ORDER BY CreationDate DESC
+			ORDER BY Score DESC
 			LIMIT 15`
 
 	rows, err := db.Query(selectQuery, classification, details)
